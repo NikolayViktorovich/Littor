@@ -1,0 +1,641 @@
+import React, { useEffect, useRef } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  StatusBar,
+  Image,
+  Alert,
+  Share,
+  Modal,
+  Animated,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { colors, typography } from '../theme/colors';
+import { useApp } from '../context/AppContext';
+export default function ContactProfileScreen({ route, navigation }) {
+  const { contact } = route.params;
+  const { blockUser, unblockUser, chats, deleteChat, clearMessages } = useApp();
+  const currentChat = chats.find(c => c.name === contact.name);
+  const isBlocked = currentChat?.blocked || false;
+  const [menuVisible, setMenuVisible] = React.useState(false);
+  const [isMuted, setIsMuted] = React.useState(false);
+  const slideAnim = useRef(new Animated.Value(300)).current;
+  const opacityAnim = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    if (menuVisible) {
+      Animated.parallel([
+        Animated.spring(slideAnim, {
+          toValue: 0,
+          tension: 80,
+          friction: 10,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacityAnim, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      Animated.parallel([
+        Animated.timing(slideAnim, {
+          toValue: 300,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacityAnim, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [menuVisible]);
+  const handleCall = (callType) => {
+    navigation.navigate('Call', { contact, type: 'outgoing', callType });
+  };
+  const handleBlock = () => {
+    if (isBlocked) {
+      Alert.alert(
+        'Unblock User',
+        `Unblock ${contact.name}?`,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { 
+            text: 'Unblock', 
+            onPress: () => {
+              if (currentChat) unblockUser(currentChat.id);
+            }
+          },
+        ]
+      );
+    } else {
+      Alert.alert(
+        'Block User',
+        `Block ${contact.name}?`,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { 
+            text: 'Block', 
+            style: 'destructive',
+            onPress: () => {
+              if (currentChat) blockUser(currentChat.id);
+            }
+          },
+        ]
+      );
+    }
+  };
+  const handleNotifications = () => {
+    setIsMuted(!isMuted);
+    Alert.alert(
+      isMuted ? 'Unmuted' : 'Muted',
+      `Notifications ${isMuted ? 'enabled' : 'disabled'} for ${contact.name}`
+    );
+  };
+  const handleShare = async () => {
+    try {
+      await Share.share({
+        message: `Contact: ${contact.name}\nUsername: @${contact.username || contact.name.toLowerCase()}`,
+        title: 'Share Contact',
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleMoreMenu = () => {
+    setMenuVisible(true);
+  };
+  const handleMenuOption = (option) => {
+    setMenuVisible(false);
+    switch (option) {
+      case 'edit':
+        setTimeout(() => {
+          Alert.prompt(
+            'Edit Contact',
+            'Enter new name for this contact',
+            [
+              { text: 'Cancel', style: 'cancel' },
+              { 
+                text: 'Save', 
+                onPress: (name) => {
+                  if (name && name.trim()) {
+                    Alert.alert('Success', `Contact renamed to ${name.trim()}`);
+                  }
+                }
+              },
+            ],
+            'plain-text',
+            contact.name
+          );
+        }, 300);
+        break;
+      case 'export':
+        setTimeout(() => {
+          Alert.alert(
+            'Export Chat',
+            'Export chat history as a file?',
+            [
+              { text: 'Cancel', style: 'cancel' },
+              { 
+                text: 'Export', 
+                onPress: () => Alert.alert('Success', 'Chat exported successfully')
+              },
+            ]
+          );
+        }, 300);
+        break;
+      case 'search':
+        navigation.goBack();
+        break;
+      case 'report':
+        setTimeout(() => {
+          Alert.alert(
+            'Report User',
+            `Report ${contact.name} for spam or abuse?`,
+            [
+              { text: 'Cancel', style: 'cancel' },
+              { 
+                text: 'Report', 
+                style: 'destructive',
+                onPress: () => Alert.alert('Reported', 'User has been reported')
+              },
+            ]
+          );
+        }, 300);
+        break;
+    }
+  };
+  const handleClearChat = () => {
+    Alert.alert(
+      'Clear Chat History',
+      `Delete all messages with ${contact.name}?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Clear', 
+          style: 'destructive',
+          onPress: () => {
+            if (currentChat) {
+              clearMessages(currentChat.id);
+              Alert.alert('Success', 'Chat history cleared');
+            }
+          }
+        },
+      ]
+    );
+  };
+  const handleDeleteChat = () => {
+    Alert.alert(
+      'Delete Chat',
+      `Delete chat with ${contact.name}? This cannot be undone.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Delete', 
+          style: 'destructive',
+          onPress: () => {
+            if (currentChat) {
+              deleteChat(currentChat.id);
+              navigation.navigate('Main');
+              Alert.alert('Success', 'Chat deleted');
+            }
+          }
+        },
+      ]
+    );
+  };
+  const handleChangeChatColor = () => {
+    if (currentChat) {
+      navigation.navigate('ChatColor', { chatId: currentChat.id });
+    } else {
+      Alert.alert('Error', 'Chat not found');
+    }
+  };
+  const handleChangeWallpaper = () => {
+    if (currentChat) {
+      navigation.navigate('ChatWallpaper', { chatId: currentChat.id });
+    } else {
+      Alert.alert('Error', 'Chat not found');
+    }
+  };
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor={contact.profileColor || '#FF3B30'} />
+      <View style={[styles.topSection, { backgroundColor: contact.profileColor || '#FF3B30' }]}>
+        <View style={styles.header}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="chevron-back" size={24} color="#ffffff" />
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.moreButton}
+            onPress={handleMoreMenu}
+          >
+            <Ionicons name="ellipsis-vertical" size={20} color="#ffffff" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.profileSection}>
+          <View style={styles.avatarContainer}>
+            {contact.photoUri ? (
+              <Image source={{ uri: contact.photoUri }} style={styles.avatarImage} />
+            ) : (
+              <Text style={styles.avatarText}>{contact.name[0].toUpperCase()}</Text>
+            )}
+          </View>
+          <Text style={styles.name}>{contact.name}</Text>
+          <Text style={styles.status}>
+            {isBlocked ? 'blocked' : contact.online ? 'online' : contact.status || 'last seen recently'}
+          </Text>
+        </View>
+        <View style={styles.actionsRow}>
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={() => handleCall('audio')}
+          >
+            <View style={styles.actionIcon}>
+              <Ionicons name="call" size={20} color="#ffffff" />
+            </View>
+            <Text style={styles.actionLabel}>Call</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={() => handleCall('video')}
+          >
+            <View style={styles.actionIcon}>
+              <Ionicons name="videocam" size={20} color="#ffffff" />
+            </View>
+            <Text style={styles.actionLabel}>Video</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={handleNotifications}
+          >
+            <View style={styles.actionIcon}>
+              <Ionicons name={isMuted ? "notifications-off" : "notifications"} size={20} color="#ffffff" />
+            </View>
+            <Text style={styles.actionLabel}>{isMuted ? 'Unmute' : 'Mute'}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={handleShare}
+          >
+            <View style={styles.actionIcon}>
+              <Ionicons name="share-outline" size={20} color="#ffffff" />
+            </View>
+            <Text style={styles.actionLabel}>Share</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.section}>
+          <View style={styles.infoRow}>
+            <Ionicons name="call-outline" size={18} color={colors.text} style={styles.infoIcon} />
+            <View style={styles.infoContent}>
+              <Text style={styles.infoLabel}>Phone</Text>
+              <Text style={styles.infoValue}>{contact.phone || '+1 234 567 8900'}</Text>
+            </View>
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.infoRow}>
+            <Ionicons name="at" size={18} color={colors.text} style={styles.infoIcon} />
+            <View style={styles.infoContent}>
+              <Text style={styles.infoLabel}>Username</Text>
+              <Text style={styles.infoValue}>@{contact.username || contact.name.toLowerCase()}</Text>
+            </View>
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.infoRow}>
+            <Ionicons name="information-circle-outline" size={18} color={colors.text} style={styles.infoIcon} />
+            <View style={styles.infoContent}>
+              <Text style={styles.infoLabel}>Bio</Text>
+              <Text style={styles.infoValue}>{contact.bio || 'No bio yet'}</Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.section}>
+          <TouchableOpacity 
+            style={styles.settingsItem}
+            onPress={handleNotifications}
+          >
+            <Ionicons 
+              name={isMuted ? "notifications-off-outline" : "notifications-outline"} 
+              size={18} 
+              color={colors.text} 
+              style={styles.menuIcon} 
+            />
+            <Text style={styles.menuText}>Notifications</Text>
+            <Text style={styles.menuValue}>{isMuted ? 'Off' : 'On'}</Text>
+          </TouchableOpacity>
+          <View style={styles.divider} />
+          <TouchableOpacity 
+            style={styles.settingsItem}
+            onPress={handleChangeChatColor}
+          >
+            <Ionicons name="color-palette-outline" size={18} color={colors.text} style={styles.menuIcon} />
+            <Text style={styles.menuText}>Change Chat Color</Text>
+            <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
+          </TouchableOpacity>
+          <View style={styles.divider} />
+          <TouchableOpacity 
+            style={styles.settingsItem}
+            onPress={handleChangeWallpaper}
+          >
+            <Ionicons name="image-outline" size={18} color={colors.text} style={styles.menuIcon} />
+            <Text style={styles.menuText}>Change Wallpaper</Text>
+            <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.section}>
+          <TouchableOpacity 
+            style={styles.settingsItem}
+            onPress={handleClearChat}
+          >
+            <Ionicons name="trash-outline" size={18} color={colors.text} style={styles.menuIcon} />
+            <Text style={styles.menuText}>Clear Chat History</Text>
+          </TouchableOpacity>
+          <View style={styles.divider} />
+          <TouchableOpacity style={styles.settingsItem} onPress={handleBlock}>
+            <Ionicons 
+              name={isBlocked ? "checkmark-circle-outline" : "ban-outline"} 
+              size={18} 
+              color={isBlocked ? colors.text : colors.error} 
+              style={styles.menuIcon} 
+            />
+            <Text style={[styles.menuText, !isBlocked && styles.menuTextDanger]}>
+              {isBlocked ? 'Unblock User' : 'Block User'}
+            </Text>
+          </TouchableOpacity>
+          <View style={styles.divider} />
+          <TouchableOpacity 
+            style={styles.settingsItem}
+            onPress={handleDeleteChat}
+          >
+            <Ionicons name="trash-outline" size={18} color={colors.error} style={styles.menuIcon} />
+            <Text style={[styles.menuText, styles.menuTextDanger]}>Delete Chat</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+      <Modal
+        visible={menuVisible}
+        transparent
+        animationType="none"
+        onRequestClose={() => setMenuVisible(false)}
+      >
+        <TouchableOpacity 
+          style={styles.overlay}
+          activeOpacity={1}
+          onPress={() => setMenuVisible(false)}
+        >
+          <Animated.View style={[styles.backdrop, { opacity: opacityAnim }]} />
+        </TouchableOpacity>
+        <Animated.View 
+          style={[
+            styles.menuContainer,
+            { transform: [{ translateY: slideAnim }] }
+          ]}
+        >
+          <View style={styles.menu}>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => handleMenuOption('edit')}
+              activeOpacity={0.6}
+            >
+              <View style={styles.menuItemContent}>
+                <Ionicons name="create-outline" size={22} color={colors.text} />
+                <Text style={styles.menuItemText}>Edit Contact</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => handleMenuOption('search')}
+              activeOpacity={0.6}
+            >
+              <View style={styles.menuItemContent}>
+                <Ionicons name="search-outline" size={22} color={colors.text} />
+                <Text style={styles.menuItemText}>Search in Chat</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => handleMenuOption('export')}
+              activeOpacity={0.6}
+            >
+              <View style={styles.menuItemContent}>
+                <Ionicons name="download-outline" size={22} color={colors.text} />
+                <Text style={styles.menuItemText}>Export Chat</Text>
+              </View>
+            </TouchableOpacity>
+            <View style={styles.menuDivider} />
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => handleMenuOption('report')}
+              activeOpacity={0.6}
+            >
+              <View style={styles.menuItemContent}>
+                <Ionicons name="flag-outline" size={22} color={colors.error} />
+                <Text style={[styles.menuItemText, styles.menuItemTextDanger]}>Report User</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </Animated.View>
+      </Modal>
+    </View>
+  );
+}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  topSection: {
+    paddingBottom: 20,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+    paddingTop: 50,
+    paddingBottom: 12,
+  },
+  backButton: {
+    width: 36,
+    height: 36,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  moreButton: {
+    width: 36,
+    height: 36,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileSection: {
+    alignItems: 'center',
+    paddingVertical: 16,
+  },
+  avatarContainer: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#ffffff',
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+  },
+  avatarText: {
+    fontSize: 36,
+    fontFamily: typography.semiBold,
+    color: '#ffffff',
+  },
+  name: {
+    fontSize: 22,
+    fontFamily: typography.bold,
+    color: '#ffffff',
+    marginBottom: 3,
+  },
+  status: {
+    fontSize: 14,
+    color: 'rgba(255, 255, 255, 0.8)',
+  },
+  actionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+    paddingTop: 16,
+    gap: 4,
+  },
+  actionButton: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  actionIcon: {
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 14,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    marginBottom: 6,
+    width: '100%',
+    alignItems: 'center',
+  },
+  actionLabel: {
+    fontSize: 12,
+    color: '#ffffff',
+    fontFamily: typography.medium,
+  },
+  content: {
+    flex: 1,
+  },
+  section: {
+    backgroundColor: colors.surface,
+    marginTop: 12,
+    marginHorizontal: 12,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  infoRow: {
+    flexDirection: 'row',
+    padding: 12,
+    alignItems: 'center',
+  },
+  infoIcon: {
+    marginRight: 12,
+    width: 20,
+  },
+  infoContent: {
+    flex: 1,
+  },
+  infoLabel: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    marginBottom: 3,
+  },
+  infoValue: {
+    fontSize: 15,
+    color: colors.text,
+  },
+  divider: {
+    height: 0.5,
+    backgroundColor: colors.separator,
+    marginLeft: 44,
+  },
+  settingsItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+  },
+  menuIcon: {
+    marginRight: 12,
+    width: 20,
+  },
+  menuText: {
+    flex: 1,
+    fontSize: 15,
+    color: colors.text,
+  },
+  menuValue: {
+    fontSize: 15,
+    color: colors.textSecondary,
+    marginRight: 6,
+  },
+  menuTextDanger: {
+    color: colors.error,
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  menuContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: colors.surface,
+  },
+  menu: {
+    paddingTop: 16,
+    paddingBottom: 32,
+  },
+  menuItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+  },
+  menuItemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  menuItemText: {
+    fontSize: 16,
+    fontFamily: typography.regular,
+    color: colors.text,
+  },
+  menuItemTextDanger: {
+    color: colors.error,
+  },
+  menuDivider: {
+    height: 0.5,
+    backgroundColor: colors.separator,
+    marginVertical: 6,
+    marginHorizontal: 20,
+  },
+});
