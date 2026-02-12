@@ -1,13 +1,12 @@
-import { useRef, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View, Text, StyleSheet, Platform, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
+import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
-
+import { useRef, useEffect } from 'react';
 import ChatsScreen from '../screens/ChatsScreen';
 import ChatScreen from '../screens/ChatScreen';
 import ContactsScreen from '../screens/ContactsScreen';
@@ -17,243 +16,327 @@ import ArchivedChatsScreen from '../screens/ArchivedChatsScreen';
 import MyProfileScreen from '../screens/MyProfileScreen';
 import SavedMessagesScreen from '../screens/SavedMessagesScreen';
 import DevicesScreen from '../screens/DevicesScreen';
-
+import ProfileColorScreen from '../screens/ProfileColorScreen';
+import ProfilePhotoScreen from '../screens/ProfilePhotoScreen';
+import CallScreen from '../screens/CallScreen';
+import ContactProfileScreen from '../screens/ContactProfileScreen';
+import ChatColorScreen from '../screens/ChatColorScreen';
+import ChatWallpaperScreen from '../screens/ChatWallpaperScreen';
+import NotificationsScreen from '../screens/NotificationsScreen';
+import PrivacySecurityScreen from '../screens/PrivacySecurityScreen';
+import DataStorageScreen from '../screens/DataStorageScreen';
+import HelpScreen from '../screens/HelpScreen';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-
-const TabIcon = ({ iconName, label, focused, badge }) => {
-  const scale = useRef(new Animated.Value(1)).current;
-  const dropScale = useRef(new Animated.Value(0)).current;
-  const dropOpacity = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    if (focused) {
-      // Сброс значений
-      dropScale.setValue(0);
-      dropOpacity.setValue(0);
-      
-      // Анимация капли
-      Animated.sequence([
-        Animated.parallel([
-          Animated.spring(scale, {
-            toValue: 1.3,
-            tension: 80,
-            friction: 4,
+function TabNavigator() {
+  const { chats } = useApp();
+  const unreadCount = chats.reduce((sum, chat) => sum + (chat.unread || 0), 0);
+  const CustomTabBar = ({ state, navigation }) => {
+    const blobPosition = useRef(new Animated.Value(state.index)).current;
+    const blobScale = useRef(new Animated.Value(1)).current;
+    const blobScaleX = useRef(new Animated.Value(1)).current;
+    const blobScaleY = useRef(new Animated.Value(1)).current;
+    const blobRotate = useRef(new Animated.Value(0)).current;
+    const tabBarBounce = useRef(new Animated.Value(1)).current;
+    const tabBarFlash = useRef(new Animated.Value(0)).current;
+    useEffect(() => {
+      Animated.parallel([
+        Animated.spring(blobPosition, {
+          toValue: state.index,
+          useNativeDriver: true,
+          tension: 50,
+          friction: 8,
+        }),
+        Animated.sequence([
+          Animated.spring(blobScaleX, {
+            toValue: 1.08,
+            useNativeDriver: true,
+            tension: 180,
+            friction: 12,
+            duration: 200,
+          }),
+          Animated.spring(blobScaleX, {
+            toValue: 1,
+            useNativeDriver: true,
+            tension: 180,
+            friction: 12,
+          }),
+        ]),
+        Animated.sequence([
+          Animated.spring(blobScaleY, {
+            toValue: 0.95,
+            useNativeDriver: true,
+            tension: 180,
+            friction: 12,
+            duration: 200,
+          }),
+          Animated.spring(blobScaleY, {
+            toValue: 1,
+            useNativeDriver: true,
+            tension: 180,
+            friction: 12,
+          }),
+        ]),
+        Animated.sequence([
+          Animated.spring(blobRotate, {
+            toValue: 0.03,
+            useNativeDriver: true,
+            tension: 180,
+            friction: 12,
+            duration: 200,
+          }),
+          Animated.spring(blobRotate, {
+            toValue: 0,
+            useNativeDriver: true,
+            tension: 180,
+            friction: 12,
+          }),
+        ]),
+        Animated.sequence([
+          Animated.timing(tabBarBounce, {
+            toValue: 1.03,
+            duration: 100,
             useNativeDriver: true,
           }),
-          Animated.spring(dropScale, {
-            toValue: 2,
-            tension: 60,
-            friction: 5,
-            useNativeDriver: true,
-          }),
-          Animated.timing(dropOpacity, {
+          Animated.timing(tabBarBounce, {
             toValue: 1,
             duration: 150,
             useNativeDriver: true,
           }),
         ]),
-        Animated.parallel([
-          Animated.spring(scale, {
+        Animated.sequence([
+          Animated.timing(tabBarFlash, {
             toValue: 1,
-            tension: 80,
-            friction: 6,
-            useNativeDriver: true,
+            duration: 150,
+            useNativeDriver: false,
           }),
-          Animated.timing(dropScale, {
-            toValue: 2.5,
-            duration: 300,
-            useNativeDriver: true,
-          }),
-          Animated.timing(dropOpacity, {
+          Animated.timing(tabBarFlash, {
             toValue: 0,
-            duration: 300,
-            useNativeDriver: true,
+            duration: 200,
+            useNativeDriver: false,
           }),
         ]),
       ]).start();
-    } else {
-      scale.setValue(1);
-      dropScale.setValue(0);
-      dropOpacity.setValue(0);
-    }
-  }, [focused]);
-
-  return (
-    <View style={styles.tabIconContainer}>
-      <Animated.View
+    }, [state.index]);
+    const blobTranslateX = blobPosition.interpolate({
+      inputRange: [0, 1, 2, 3],
+      outputRange: [-120, -40, 40, 120], 
+    });
+    const blobRotation = blobRotate.interpolate({
+      inputRange: [-1, 1],
+      outputRange: ['-5deg', '5deg'],
+    });
+    const flashBackgroundColor = tabBarFlash.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['rgba(18, 18, 20, 0.2)', 'rgba(255, 255, 255, 0.15)'],
+    });
+    return (
+      <Animated.View 
         style={[
-          styles.dropEffect,
+          styles.tabBarContainer,
           {
-            transform: [{ scale: dropScale }],
-            opacity: dropOpacity,
+            transform: [{ scale: tabBarBounce }],
           },
         ]}
-      />
-      <Animated.View style={{ transform: [{ scale }], zIndex: 2 }}>
-        <Ionicons 
-          name={iconName} 
-          size={26} 
-          color={colors.text}
-        />
+      >
+        <Animated.View style={[styles.tabBarBackground, { backgroundColor: flashBackgroundColor }]} />
+        <BlurView intensity={120} tint="dark" style={styles.tabBarBlur}>
+          <View style={styles.tabBarOverlay} />
+          <View style={styles.tabBarContent}>
+            <Animated.View
+              style={[
+                styles.blob,
+                {
+                  transform: [
+                    { translateX: blobTranslateX },
+                    { scaleX: blobScaleX },
+                    { scaleY: blobScaleY },
+                    { rotate: blobRotation },
+                  ],
+                },
+              ]}
+            />
+            {state.routes.map((route, index) => {
+              const isFocused = state.index === index;
+              const onPress = () => {
+                const event = navigation.emit({
+                  type: 'tabPress',
+                  target: route.key,
+                  canPreventDefault: true,
+                });
+                if (!isFocused && !event.defaultPrevented) {
+                  navigation.navigate(route.name);
+                }
+              };
+              let iconName;
+              let label;
+              let showBadge = false;
+              switch (route.name) {
+                case 'Contacts':
+                  iconName = isFocused ? 'people' : 'people-outline';
+                  label = 'Contacts';
+                  break;
+                case 'Calls':
+                  iconName = isFocused ? 'call' : 'call-outline';
+                  label = 'Calls';
+                  break;
+                case 'Chats':
+                  iconName = isFocused ? 'chatbubbles' : 'chatbubbles-outline';
+                  label = 'Chats';
+                  showBadge = unreadCount > 0;
+                  break;
+                case 'Settings':
+                  iconName = isFocused ? 'settings' : 'settings-outline';
+                  label = 'Settings';
+                  break;
+              }
+              return (
+                <TouchableOpacity
+                  key={route.key}
+                  onPress={onPress}
+                  style={styles.tabButton}
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.tabIconContainer}>
+                    <Ionicons
+                      name={iconName}
+                      size={22}
+                      color={isFocused ? colors.text : colors.textSecondary}
+                    />
+                    {showBadge && (
+                      <View style={styles.badge}>
+                        <Text style={styles.badgeText}>{unreadCount > 99 ? '99+' : unreadCount}</Text>
+                      </View>
+                    )}
+                  </View>
+                  <Text style={[styles.tabLabel, isFocused && styles.tabLabelActive]}>
+                    {label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </BlurView>
       </Animated.View>
-      {label && (
-        <Text 
-          style={[styles.tabLabel, focused && styles.tabLabelFocused]}
-          numberOfLines={1}
-        >
-          {label}
-        </Text>
-      )}
-      {badge > 0 && (
-        <View style={styles.tabBadge}>
-          <View style={styles.tabBadgeBackground} />
-          <Text style={styles.tabBadgeText}>{badge}</Text>
-        </View>
-      )}
-    </View>
-  );
-};
-
-function TabNavigator() {
-  const { chats } = useApp();
-  const unreadCount = chats.reduce((sum, chat) => sum + (chat.unread || 0), 0);
-
+    );
+  };
   return (
     <Tab.Navigator
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: {
-          position: 'absolute',
-          backgroundColor: Platform.OS === 'ios' ? 'transparent' : 'rgba(0, 0, 0, 0.95)',
-          borderTopWidth: 0,
-          elevation: 0,
-          height: 84,
-          paddingBottom: 20,
-          paddingTop: 8,
-        },
-        tabBarBackground: () => (
-          Platform.OS === 'ios' ? (
-            <BlurView
-              intensity={80}
-              tint="dark"
-              style={StyleSheet.absoluteFill}
-            />
-          ) : null
-        ),
-        tabBarShowLabel: false,
-      }}
+      tabBar={(props) => <CustomTabBar {...props} />}
+      screenOptions={{ headerShown: false }}
     >
-      <Tab.Screen
-        name="Contacts"
-        component={ContactsScreen}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <TabIcon iconName="person-outline" label="Contacts" focused={focused} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Calls"
-        component={CallsScreen}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <TabIcon iconName="call-outline" label="Calls" focused={focused} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Chats"
-        component={ChatsScreen}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <TabIcon iconName="chatbubble-outline" label="Chats" focused={focused} badge={unreadCount} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <TabIcon iconName="settings-outline" label="Settings" focused={focused} />
-          ),
-        }}
-      />
+      <Tab.Screen name="Contacts" component={ContactsScreen} />
+      <Tab.Screen name="Calls" component={CallsScreen} />
+      <Tab.Screen name="Chats" component={ChatsScreen} />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );
 }
-
 export default function AppNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-          cardStyle: { backgroundColor: colors.background },
-        }}
-      >
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Main" component={TabNavigator} />
         <Stack.Screen name="Chat" component={ChatScreen} />
         <Stack.Screen name="ArchivedChats" component={ArchivedChatsScreen} />
         <Stack.Screen name="MyProfile" component={MyProfileScreen} />
         <Stack.Screen name="SavedMessages" component={SavedMessagesScreen} />
         <Stack.Screen name="Devices" component={DevicesScreen} />
+        <Stack.Screen name="ProfileColor" component={ProfileColorScreen} />
+        <Stack.Screen name="ProfilePhoto" component={ProfilePhotoScreen} />
+        <Stack.Screen name="Call" component={CallScreen} />
+        <Stack.Screen name="ContactProfile" component={ContactProfileScreen} />
+        <Stack.Screen name="ChatColor" component={ChatColorScreen} />
+        <Stack.Screen name="ChatWallpaper" component={ChatWallpaperScreen} />
+        <Stack.Screen name="Notifications" component={NotificationsScreen} />
+        <Stack.Screen name="PrivacySecurity" component={PrivacySecurityScreen} />
+        <Stack.Screen name="DataStorage" component={DataStorageScreen} />
+        <Stack.Screen name="Help" component={HelpScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
 const styles = StyleSheet.create({
-  tabIconContainer: {
+  tabBarContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 40,
+    right: 40,
+    height: 60,
+    borderRadius: 35,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  tabBarBackground: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  tabBarBlur: {
+    flex: 1,
+    borderRadius: 35,
+  },
+  tabBarOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(18, 18, 20, 0.05)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 35,
+  },
+  tabBarContent: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    paddingHorizontal: 8,
+  },
+  blob: {
+    position: 'absolute',
+    width: 70,
+    height: 62,
+    backgroundColor: 'rgba(60, 60, 67, 0.6)',
+    borderRadius: 28,
+    zIndex: 0,
+  },
+  tabButton: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'relative',
-    width: 70,
-  },
-  dropEffect: {
-    position: 'absolute',
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#ffffff',
+    paddingVertical: 8,
     zIndex: 1,
+  },
+  tabIconContainer: {
+    position: 'relative',
+    marginBottom: 2,
   },
   tabLabel: {
     fontSize: 10,
     color: colors.textSecondary,
-    fontWeight: '500',
-    marginTop: 2,
+    fontFamily: typography.medium,
   },
-  tabLabelFocused: {
+  tabLabelActive: {
     color: colors.text,
+    fontFamily: typography.semiBold,
   },
-  tabBadge: {
+  badge: {
     position: 'absolute',
-    top: -4,
-    right: 10,
-    borderRadius: 10,
-    minWidth: 20,
-    height: 20,
+    top: -6,
+    right: -10,
+    backgroundColor: colors.primary,
+    borderRadius: 9,
+    minWidth: 18,
+    height: 18,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 6,
-    zIndex: 10,
+    paddingHorizontal: 5,
+    borderWidth: 2,
+    borderColor: '#ffffff',
   },
-  tabBadgeBackground: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    zIndex: -1,
-  },
-  tabBadgeText: {
-    color: '#000000',
-    fontSize: 12,
-    fontWeight: '600',
-    zIndex: 1,
+  badgeText: {
+    color: '#ffffff',
+    fontSize: 10,
+    fontFamily: typography.bold,
   },
 });
