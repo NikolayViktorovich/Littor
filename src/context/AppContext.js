@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 const AppContext = createContext();
-
 export const useApp = () => {
   const context = useContext(AppContext);
   if (!context) {
@@ -10,7 +8,6 @@ export const useApp = () => {
   }
   return context;
 };
-
 const STORAGE_KEYS = {
   CHATS: '@chats',
   CONTACTS: '@contacts',
@@ -19,15 +16,14 @@ const STORAGE_KEYS = {
   PROFILE: '@profile',
   ARCHIVED_CHATS: '@archived_chats',
 };
-
 const DEFAULT_PROFILE = {
   name: 'NIKOLAS',
   phone: '+7 951 444 3122',
   username: 'shouldcleanmyr',
   avatar: 'N',
   bio: '',
+  profileColor: '#FF3B30',
 };
-
 export const AppProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [contacts, setContacts] = useState([]);
@@ -36,11 +32,9 @@ export const AppProvider = ({ children }) => {
   const [profile, setProfile] = useState(DEFAULT_PROFILE);
   const [archivedChats, setArchivedChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     loadData();
   }, []);
-
   const loadData = async () => {
     try {
       const [chatsData, contactsData, callsData, messagesData, profileData, archivedData] = await Promise.all([
@@ -51,7 +45,6 @@ export const AppProvider = ({ children }) => {
         AsyncStorage.getItem(STORAGE_KEYS.PROFILE),
         AsyncStorage.getItem(STORAGE_KEYS.ARCHIVED_CHATS),
       ]);
-
       if (chatsData) setChats(JSON.parse(chatsData));
       if (contactsData) setContacts(JSON.parse(contactsData));
       if (callsData) setCalls(JSON.parse(callsData));
@@ -64,7 +57,6 @@ export const AppProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
-
   const saveData = async (key, data) => {
     try {
       await AsyncStorage.setItem(key, JSON.stringify(data));
@@ -72,7 +64,6 @@ export const AppProvider = ({ children }) => {
       console.error('Error saving data:', error);
     }
   };
-
   const addMessage = (chatId, message) => {
     const newMessage = {
       id: Date.now().toString(),
@@ -82,7 +73,6 @@ export const AppProvider = ({ children }) => {
       isMine: true,
       hasCheck: true,
     };
-
     setMessages(prev => {
       const updated = {
         ...prev,
@@ -91,7 +81,6 @@ export const AppProvider = ({ children }) => {
       saveData(STORAGE_KEYS.MESSAGES, updated);
       return updated;
     });
-
     setChats(prev => {
       const updated = prev.map(chat =>
         chat.id === chatId
@@ -101,14 +90,11 @@ export const AppProvider = ({ children }) => {
       saveData(STORAGE_KEYS.CHATS, updated);
       return updated;
     });
-
     return newMessage;
   };
-
   const createChat = (contact) => {
     const existingChat = chats.find(chat => chat.name === contact.name);
     if (existingChat) return existingChat;
-
     const newChat = {
       id: Date.now().toString(),
       name: contact.name,
@@ -119,57 +105,47 @@ export const AppProvider = ({ children }) => {
       pinned: false,
       verified: false,
     };
-
     setChats(prev => {
       const updated = [newChat, ...prev];
       saveData(STORAGE_KEYS.CHATS, updated);
       return updated;
     });
-
     return newChat;
   };
-
   const archiveChat = (chatId) => {
     setChats(prev => {
       const chatToArchive = prev.find(chat => chat.id === chatId);
       if (!chatToArchive) return prev;
-
       setArchivedChats(prevArchived => {
         const updated = [...prevArchived, chatToArchive];
         saveData(STORAGE_KEYS.ARCHIVED_CHATS, updated);
         return updated;
       });
-
       const updated = prev.filter(chat => chat.id !== chatId);
       saveData(STORAGE_KEYS.CHATS, updated);
       return updated;
     });
   };
-
   const unarchiveChat = (chatId) => {
     setArchivedChats(prev => {
       const chatToUnarchive = prev.find(chat => chat.id === chatId);
       if (!chatToUnarchive) return prev;
-
       setChats(prevChats => {
         const updated = [chatToUnarchive, ...prevChats];
         saveData(STORAGE_KEYS.CHATS, updated);
         return updated;
       });
-
       const updated = prev.filter(chat => chat.id !== chatId);
       saveData(STORAGE_KEYS.ARCHIVED_CHATS, updated);
       return updated;
     });
   };
-
   const deleteChat = (chatId) => {
     setChats(prev => {
       const updated = prev.filter(chat => chat.id !== chatId);
       saveData(STORAGE_KEYS.CHATS, updated);
       return updated;
     });
-
     setMessages(prev => {
       const updated = { ...prev };
       delete updated[chatId];
@@ -177,7 +153,6 @@ export const AppProvider = ({ children }) => {
       return updated;
     });
   };
-
   const clearMessages = (chatId) => {
     setMessages(prev => {
       const updated = { ...prev };
@@ -185,7 +160,6 @@ export const AppProvider = ({ children }) => {
       saveData(STORAGE_KEYS.MESSAGES, updated);
       return updated;
     });
-
     setChats(prev => {
       const updated = prev.map(chat =>
         chat.id === chatId
@@ -196,7 +170,6 @@ export const AppProvider = ({ children }) => {
       return updated;
     });
   };
-
   const blockUser = (chatId) => {
     setChats(prev => {
       const updated = prev.map(chat =>
@@ -208,7 +181,6 @@ export const AppProvider = ({ children }) => {
       return updated;
     });
   };
-
   const unblockUser = (chatId) => {
     setChats(prev => {
       const updated = prev.map(chat =>
@@ -220,7 +192,6 @@ export const AppProvider = ({ children }) => {
       return updated;
     });
   };
-
   const addContact = (contact) => {
     const newContact = {
       id: Date.now().toString(),
@@ -228,16 +199,13 @@ export const AppProvider = ({ children }) => {
       status: 'last seen recently',
       online: false,
     };
-
     setContacts(prev => {
       const updated = [newContact, ...prev];
       saveData(STORAGE_KEYS.CONTACTS, updated);
       return updated;
     });
-
     return newContact;
   };
-
   const addCall = (contact, type, duration = null) => {
     const newCall = {
       id: Date.now().toString(),
@@ -247,16 +215,13 @@ export const AppProvider = ({ children }) => {
       date: new Date().toLocaleDateString('en-GB'),
       time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
     };
-
     setCalls(prev => {
       const updated = [newCall, ...prev];
       saveData(STORAGE_KEYS.CALLS, updated);
       return updated;
     });
-
     return newCall;
   };
-
   const updateProfile = (updates) => {
     setProfile(prev => {
       const updated = { ...prev, ...updates };
@@ -264,7 +229,31 @@ export const AppProvider = ({ children }) => {
       return updated;
     });
   };
-
+  const updateChatColor = (chatId, color) => {
+    setChats(prev => {
+      const updated = prev.map(chat =>
+        chat.id === chatId ? { ...chat, chatColor: color } : chat
+      );
+      saveData(STORAGE_KEYS.CHATS, updated);
+      return updated;
+    });
+  };
+  const updateChatWallpaper = (chatId, wallpaper, wallpaperUri = null, settings = {}) => {
+    setChats(prev => {
+      const updated = prev.map(chat =>
+        chat.id === chatId ? { 
+          ...chat, 
+          wallpaper, 
+          wallpaperUri,
+          wallpaperBrightness: settings.brightness ?? 1,
+          wallpaperBlur: settings.blur ?? 0,
+          wallpaperOpacity: settings.opacity ?? 1,
+        } : chat
+      );
+      saveData(STORAGE_KEYS.CHATS, updated);
+      return updated;
+    });
+  };
   const value = {
     chats,
     contacts,
@@ -284,7 +273,8 @@ export const AppProvider = ({ children }) => {
     addContact,
     addCall,
     updateProfile,
+    updateChatColor,
+    updateChatWallpaper,
   };
-
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
