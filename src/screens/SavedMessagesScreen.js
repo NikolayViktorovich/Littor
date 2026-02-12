@@ -11,18 +11,14 @@ import {
   StatusBar,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
+import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
-
 const SAVED_MESSAGES_CHAT_ID = 'saved_messages';
-
 export default function SavedMessagesScreen({ navigation }) {
   const { messages, addMessage } = useApp();
   const [message, setMessage] = useState('');
   const flatListRef = useRef(null);
-  
   const savedMessages = messages[SAVED_MESSAGES_CHAT_ID] || [];
-
   useEffect(() => {
     if (flatListRef.current && savedMessages.length > 0) {
       setTimeout(() => {
@@ -30,7 +26,6 @@ export default function SavedMessagesScreen({ navigation }) {
       }, 100);
     }
   }, [savedMessages.length]);
-
   const handleSendMessage = () => {
     if (message.trim()) {
       addMessage(SAVED_MESSAGES_CHAT_ID, message.trim());
@@ -40,20 +35,16 @@ export default function SavedMessagesScreen({ navigation }) {
       }, 100);
     }
   };
-
   const renderDateSeparator = (date) => (
     <View style={styles.dateSeparator}>
       <Text style={styles.dateText}>{date}</Text>
     </View>
   );
-
   const renderMessage = ({ item, index }) => {
     const showDate = index === 0 || savedMessages[index - 1]?.dateGroup !== item.dateGroup;
-    
     return (
       <>
         {showDate && renderDateSeparator(item.dateGroup)}
-        
         <View style={styles.myMessageContainer}>
           <View style={styles.myMessageBubble}>
             <Text style={styles.myMessageText}>{item.text}</Text>
@@ -65,7 +56,6 @@ export default function SavedMessagesScreen({ navigation }) {
       </>
     );
   };
-
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -73,23 +63,19 @@ export default function SavedMessagesScreen({ navigation }) {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
     >
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
-      
       <View style={styles.header}>
         <View style={styles.headerContent}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
             <Ionicons name="chevron-back" size={28} color={colors.text} />
           </TouchableOpacity>
-          
           <View style={styles.headerCenter}>
             <Text style={styles.headerTitle}>Saved Messages</Text>
           </View>
-
           <TouchableOpacity style={styles.headerButton}>
             <Ionicons name="search" size={24} color={colors.text} />
           </TouchableOpacity>
         </View>
       </View>
-
       <View style={styles.messagesContainer}>
         <FlatList
           ref={flatListRef}
@@ -109,12 +95,10 @@ export default function SavedMessagesScreen({ navigation }) {
           }
         />
       </View>
-
-      <BlurView intensity={80} tint="dark" style={styles.inputContainer}>
+      <View style={styles.inputContainer}>
         <TouchableOpacity style={styles.attachButton}>
           <Ionicons name="attach" size={24} color={colors.text} />
         </TouchableOpacity>
-        
         <View style={styles.inputWrapper}>
           <TextInput
             style={styles.input}
@@ -126,7 +110,6 @@ export default function SavedMessagesScreen({ navigation }) {
             scrollEnabled={false}
           />
         </View>
-
         <View style={styles.rightButtons}>
           {message.trim() ? (
             <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
@@ -138,11 +121,10 @@ export default function SavedMessagesScreen({ navigation }) {
             </TouchableOpacity>
           )}
         </View>
-      </BlurView>
+      </View>
     </KeyboardAvoidingView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -168,7 +150,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '600',
+    fontFamily: typography.semiBold,
     color: colors.text,
   },
   headerButton: {
@@ -194,7 +176,7 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 18,
     color: colors.textSecondary,
-    fontWeight: '500',
+    fontFamily: typography.medium,
     marginTop: 16,
   },
   emptySubtext: {
@@ -210,7 +192,7 @@ const styles = StyleSheet.create({
   dateText: {
     fontSize: 14,
     color: colors.textSecondary,
-    fontWeight: '500',
+    fontFamily: typography.medium,
   },
   myMessageContainer: {
     flexDirection: 'row',

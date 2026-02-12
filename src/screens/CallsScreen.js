@@ -7,31 +7,27 @@ import {
   StyleSheet,
   StatusBar,
   Alert,
+  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
+import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
-
 const FILTERS = [
   { id: 'all', label: 'All' },
   { id: 'missed', label: 'Missed' },
 ];
-
 export default function CallsScreen({ navigation }) {
   const { calls, contacts, addCall } = useApp();
   const [selectedFilter, setSelectedFilter] = useState('all');
-
   const filteredCalls = useMemo(() => {
     if (selectedFilter === 'all') return calls;
     return calls.filter(call => call.type === 'missed');
   }, [calls, selectedFilter]);
-
   const handleStartCall = () => {
     if (contacts.length === 0) {
       Alert.alert('No Contacts', 'Add contacts first to make a call');
       return;
     }
-
     Alert.alert(
       'Start Call',
       'Select a contact',
@@ -39,21 +35,26 @@ export default function CallsScreen({ navigation }) {
         text: contact.name,
         onPress: () => {
           addCall(contact, 'outgoing', null);
-          Alert.alert('Call Started', `Calling ${contact.name}...`);
+          navigation.navigate('Call', { contact, type: 'outgoing' });
         },
       })).concat([{ text: 'Cancel', style: 'cancel' }])
     );
   };
-
-  const renderCall = ({ item }) => (
-    <TouchableOpacity
-      style={styles.callItem}
-      activeOpacity={0.6}
-    >
-      <View style={styles.avatar}>
-        <Text style={styles.avatarText}>{item.name[0].toUpperCase()}</Text>
-      </View>
-      
+  const renderCall = ({ item }) => {
+    const contact = contacts.find(c => c.name === item.name) || { name: item.name };
+    return (
+      <TouchableOpacity
+        style={styles.callItem}
+        activeOpacity={0.6}
+        onPress={() => navigation.navigate('Call', { contact, type: 'outgoing' })}
+      >
+        <View style={[styles.avatar, { backgroundColor: contact.profileColor || '#FF3B30' }]}>
+          {contact.photoUri ? (
+            <Image source={{ uri: contact.photoUri }} style={styles.avatarImage} />
+          ) : (
+            <Text style={styles.avatarText}>{item.name[0].toUpperCase()}</Text>
+          )}
+        </View>
       <View style={styles.callContent}>
         <Text style={[styles.callName, item.type === 'missed' && styles.callNameMissed]}>
           {item.name} {item.count && `(${item.count})`}
@@ -64,7 +65,6 @@ export default function CallsScreen({ navigation }) {
           </Text>
         </View>
       </View>
-
       <View style={styles.callRight}>
         <Text style={styles.callDate}>{item.date}</Text>
         <TouchableOpacity style={styles.infoButton}>
@@ -72,17 +72,15 @@ export default function CallsScreen({ navigation }) {
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
-  );
-
+    );
+  };
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
-      
       <View style={styles.header}>
         <TouchableOpacity style={styles.editButton}>
           <Text style={styles.editButtonText}>Edit</Text>
         </TouchableOpacity>
-        
         <View style={styles.filterContainer}>
           {FILTERS.map(filter => (
             <TouchableOpacity
@@ -103,14 +101,11 @@ export default function CallsScreen({ navigation }) {
           ))}
         </View>
       </View>
-
       <TouchableOpacity style={styles.newCallButton} onPress={handleStartCall}>
         <Ionicons name="call-outline" size={22} color="#ffffff" />
         <Text style={styles.newCallText}>Start New Call</Text>
       </TouchableOpacity>
-
       <Text style={styles.sectionTitle}>RECENT CALLS</Text>
-
       <FlatList
         data={filteredCalls}
         renderItem={renderCall}
@@ -126,7 +121,6 @@ export default function CallsScreen({ navigation }) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -149,7 +143,7 @@ const styles = StyleSheet.create({
   editButtonText: {
     color: colors.text,
     fontSize: 15,
-    fontWeight: '500',
+    fontFamily: typography.medium,
   },
   filterContainer: {
     flexDirection: 'row',
@@ -168,7 +162,7 @@ const styles = StyleSheet.create({
   filterText: {
     color: colors.text,
     fontSize: 15,
-    fontWeight: '500',
+    fontFamily: typography.medium,
   },
   filterTextActive: {
     color: colors.background,
@@ -183,11 +177,11 @@ const styles = StyleSheet.create({
   newCallText: {
     fontSize: 16,
     color: '#ffffff',
-    fontWeight: '500',
+    fontFamily: typography.medium,
   },
   sectionTitle: {
     fontSize: 13,
-    fontWeight: '600',
+    fontFamily: typography.semiBold,
     color: colors.textSecondary,
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -218,22 +212,26 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
+    overflow: 'hidden',
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
   },
   avatarText: {
-    color: '#000000',
+    color: '#ffffff',
     fontSize: 20,
-    fontWeight: '500',
+    fontFamily: typography.medium,
   },
   callContent: {
     flex: 1,
   },
   callName: {
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: typography.medium,
     color: colors.text,
     marginBottom: 2,
   },

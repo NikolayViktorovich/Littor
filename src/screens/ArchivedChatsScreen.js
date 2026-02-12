@@ -8,29 +8,24 @@ import {
   StatusBar,
   Alert,
 } from 'react-native';
-import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
+import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { SearchBar } from '../components/SearchBar';
-
 export default function ArchivedChatsScreen({ navigation }) {
   const { archivedChats, unarchiveChat, deleteChat } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
-
   const filteredChats = useMemo(() => {
     if (!searchQuery.trim()) return archivedChats;
     return archivedChats.filter(chat =>
       chat.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [archivedChats, searchQuery]);
-
   const handleUnarchive = (chatId) => {
     unarchiveChat(chatId);
     Alert.alert('Success', 'Chat has been unarchived');
   };
-
   const handleDelete = (chatId) => {
     Alert.alert(
       'Delete Chat',
@@ -45,7 +40,6 @@ export default function ArchivedChatsScreen({ navigation }) {
       ]
     );
   };
-
   const renderChat = ({ item }) => (
     <View style={styles.chatItemWrapper}>
       <TouchableOpacity
@@ -57,7 +51,6 @@ export default function ArchivedChatsScreen({ navigation }) {
           <Text style={styles.avatarText}>{item.name[0].toUpperCase()}</Text>
           {item.online && <View style={styles.onlineIndicator} />}
         </View>
-        
         <View style={styles.chatContent}>
           <View style={styles.chatHeader}>
             <View style={styles.nameRow}>
@@ -82,7 +75,6 @@ export default function ArchivedChatsScreen({ navigation }) {
           </View>
         </View>
       </TouchableOpacity>
-      
       {isEditMode && (
         <View style={styles.editActions}>
           <TouchableOpacity
@@ -101,12 +93,10 @@ export default function ArchivedChatsScreen({ navigation }) {
       )}
     </View>
   );
-
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
-      
-      <BlurView intensity={20} tint="dark" style={styles.header}>
+      <View style={styles.header}>
         <View style={styles.headerContent}>
           <TouchableOpacity 
             style={styles.backButton}
@@ -114,12 +104,10 @@ export default function ArchivedChatsScreen({ navigation }) {
           >
             <Ionicons name="chevron-back" size={28} color={colors.text} />
           </TouchableOpacity>
-          
           <View style={styles.headerCenter}>
             <Text style={styles.headerTitle}>Archived Chats</Text>
             <Text style={styles.headerSubtitle}>{archivedChats.length} chats</Text>
           </View>
-
           <TouchableOpacity
             style={styles.editButton}
             onPress={() => setIsEditMode(!isEditMode)}
@@ -127,15 +115,13 @@ export default function ArchivedChatsScreen({ navigation }) {
             <Text style={styles.editButtonText}>{isEditMode ? 'Done' : 'Edit'}</Text>
           </TouchableOpacity>
         </View>
-        
         <SearchBar
           value={searchQuery}
           onChangeText={setSearchQuery}
           placeholder="Search archived chats"
           style={styles.searchBar}
         />
-      </BlurView>
-
+      </View>
       <FlatList
         data={filteredChats}
         renderItem={renderChat}
@@ -155,7 +141,6 @@ export default function ArchivedChatsScreen({ navigation }) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -181,7 +166,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 17,
-    fontWeight: '600',
+    fontFamily: typography.semiBold,
     color: colors.text,
   },
   headerSubtitle: {
@@ -198,7 +183,7 @@ const styles = StyleSheet.create({
   editButtonText: {
     color: colors.text,
     fontSize: 15,
-    fontWeight: '500',
+    fontFamily: typography.medium,
   },
   searchBar: {
     marginHorizontal: 16,
@@ -232,7 +217,7 @@ const styles = StyleSheet.create({
   avatarText: {
     color: '#000000',
     fontSize: 20,
-    fontWeight: '500',
+    fontFamily: typography.medium,
   },
   onlineIndicator: {
     position: 'absolute',
@@ -261,7 +246,7 @@ const styles = StyleSheet.create({
   },
   chatName: {
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: typography.medium,
     color: colors.text,
     flex: 1,
   },
@@ -276,7 +261,7 @@ const styles = StyleSheet.create({
   },
   chatTimeUnread: {
     color: colors.primary,
-    fontWeight: '500',
+    fontFamily: typography.medium,
   },
   chatFooter: {
     flexDirection: 'row',
@@ -301,7 +286,7 @@ const styles = StyleSheet.create({
   unreadText: {
     color: colors.text,
     fontSize: 12,
-    fontWeight: '600',
+    fontFamily: typography.semiBold,
   },
   editActions: {
     position: 'absolute',
@@ -332,7 +317,7 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 18,
     color: colors.textSecondary,
-    fontWeight: '500',
+    fontFamily: typography.medium,
     marginTop: 16,
   },
   emptySubtext: {

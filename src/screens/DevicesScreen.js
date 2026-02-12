@@ -9,8 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
-
+import { colors, typography } from '../theme/colors';
 const MOCK_DEVICES = [
   {
     id: '1',
@@ -37,10 +36,8 @@ const MOCK_DEVICES = [
     isCurrentDevice: false,
   },
 ];
-
 export default function DevicesScreen({ navigation }) {
   const [devices, setDevices] = useState(MOCK_DEVICES);
-
   const getDeviceIcon = (type) => {
     switch (type) {
       case 'mobile':
@@ -53,7 +50,6 @@ export default function DevicesScreen({ navigation }) {
         return 'phone-portrait';
     }
   };
-
   const handleTerminateSession = (deviceId) => {
     Alert.alert(
       'Terminate Session',
@@ -71,7 +67,6 @@ export default function DevicesScreen({ navigation }) {
       ]
     );
   };
-
   const handleTerminateAll = () => {
     Alert.alert(
       'Terminate All Sessions',
@@ -89,17 +84,15 @@ export default function DevicesScreen({ navigation }) {
       ]
     );
   };
-
   const renderDevice = ({ item }) => (
     <View style={styles.deviceItem}>
       <View style={[styles.deviceIcon, item.isCurrentDevice && styles.deviceIconActive]}>
         <Ionicons 
           name={getDeviceIcon(item.type)} 
-          size={24} 
+          size={20} 
           color={colors.text} 
         />
       </View>
-      
       <View style={styles.deviceContent}>
         <View style={styles.deviceHeader}>
           <Text style={styles.deviceName}>{item.name}</Text>
@@ -112,24 +105,20 @@ export default function DevicesScreen({ navigation }) {
         <Text style={styles.deviceLocation}>{item.location}</Text>
         <Text style={styles.deviceLastActive}>{item.lastActive}</Text>
       </View>
-
       {!item.isCurrentDevice && (
         <TouchableOpacity
           style={styles.terminateButton}
           onPress={() => handleTerminateSession(item.id)}
         >
-          <Ionicons name="close-circle" size={24} color={colors.error} />
+          <Ionicons name="close-circle" size={20} color={colors.error} />
         </TouchableOpacity>
       )}
     </View>
   );
-
   const otherDevices = devices.filter(d => !d.isCurrentDevice);
-
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
-      
       <View style={styles.header}>
         <View style={styles.headerContent}>
           <TouchableOpacity 
@@ -138,13 +127,10 @@ export default function DevicesScreen({ navigation }) {
           >
             <Ionicons name="chevron-back" size={28} color={colors.text} />
           </TouchableOpacity>
-          
           <Text style={styles.headerTitle}>Devices</Text>
-
           <View style={styles.headerRight} />
         </View>
       </View>
-
       <FlatList
         data={devices}
         renderItem={renderDevice}
@@ -153,7 +139,7 @@ export default function DevicesScreen({ navigation }) {
         contentContainerStyle={styles.listContent}
         ListHeaderComponent={
           <View style={styles.infoCard}>
-            <Ionicons name="information-circle-outline" size={24} color={colors.text} />
+            <Ionicons name="information-circle-outline" size={20} color={colors.text} />
             <Text style={styles.infoText}>
               You can log in to Littor from multiple devices. Active sessions are shown below.
             </Text>
@@ -165,7 +151,7 @@ export default function DevicesScreen({ navigation }) {
               style={styles.terminateAllButton}
               onPress={handleTerminateAll}
             >
-              <Ionicons name="log-out-outline" size={20} color={colors.error} />
+              <Ionicons name="log-out-outline" size={18} color={colors.error} />
               <Text style={styles.terminateAllText}>Terminate All Other Sessions</Text>
             </TouchableOpacity>
           )
@@ -174,7 +160,6 @@ export default function DevicesScreen({ navigation }) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -189,61 +174,61 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: 60,
-    paddingBottom: 16,
+    paddingHorizontal: 12,
+    paddingTop: 50,
+    paddingBottom: 12,
   },
   backButton: {
-    padding: 8,
+    padding: 6,
   },
   headerTitle: {
     fontSize: 17,
-    fontWeight: '600',
+    fontFamily: typography.semiBold,
     color: colors.text,
   },
   headerRight: {
-    width: 44,
+    width: 40,
   },
   list: {
     flex: 1,
   },
   listContent: {
-    paddingBottom: 100,
+    paddingBottom: 80,
   },
   infoCard: {
     flexDirection: 'row',
     backgroundColor: colors.surface,
-    marginHorizontal: 16,
-    marginTop: 16,
-    marginBottom: 24,
-    padding: 16,
+    marginHorizontal: 12,
+    marginTop: 12,
+    marginBottom: 16,
+    padding: 12,
     borderRadius: 12,
-    gap: 12,
+    gap: 10,
   },
   infoText: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 13,
     color: colors.textSecondary,
-    lineHeight: 20,
+    lineHeight: 18,
   },
   deviceItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     backgroundColor: colors.surface,
-    marginHorizontal: 16,
-    marginBottom: 8,
+    marginHorizontal: 12,
+    marginBottom: 6,
     borderRadius: 12,
   },
   deviceIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: colors.surfaceLight,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: 10,
   },
   deviceIconActive: {
     backgroundColor: colors.surfaceLight,
@@ -254,51 +239,51 @@ const styles = StyleSheet.create({
   deviceHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 4,
+    gap: 6,
+    marginBottom: 3,
   },
   deviceName: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: 15,
+    fontFamily: typography.medium,
     color: colors.text,
   },
   currentBadge: {
     backgroundColor: colors.surfaceLight,
-    paddingHorizontal: 8,
+    paddingHorizontal: 6,
     paddingVertical: 2,
-    borderRadius: 8,
+    borderRadius: 6,
   },
   currentBadgeText: {
-    fontSize: 11,
-    fontWeight: '600',
+    fontSize: 10,
+    fontFamily: typography.semiBold,
     color: colors.text,
   },
   deviceLocation: {
-    fontSize: 14,
+    fontSize: 13,
     color: colors.textSecondary,
     marginBottom: 2,
   },
   deviceLastActive: {
-    fontSize: 13,
+    fontSize: 12,
     color: colors.textTertiary,
   },
   terminateButton: {
-    padding: 8,
+    padding: 6,
   },
   terminateAllButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(255, 59, 48, 0.2)',
-    marginHorizontal: 16,
-    marginTop: 16,
-    padding: 16,
+    marginHorizontal: 12,
+    marginTop: 12,
+    padding: 14,
     borderRadius: 12,
-    gap: 8,
+    gap: 6,
   },
   terminateAllText: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: 15,
+    fontFamily: typography.medium,
     color: colors.error,
   },
 });

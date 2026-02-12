@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,18 +8,52 @@ import {
   StatusBar,
   TextInput,
   Alert,
+  Image,
+  Modal,
+  Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
+import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
-
 export default function MyProfileScreen({ navigation }) {
   const { profile, updateProfile } = useApp();
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [name, setName] = useState(profile.name);
   const [bio, setBio] = useState(profile.bio || '');
-
+  const [menuVisible, setMenuVisible] = useState(false);
+  const slideAnim = useRef(new Animated.Value(300)).current;
+  const opacityAnim = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    if (menuVisible) {
+      Animated.parallel([
+        Animated.spring(slideAnim, {
+          toValue: 0,
+          tension: 80,
+          friction: 10,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacityAnim, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      Animated.parallel([
+        Animated.timing(slideAnim, {
+          toValue: 300,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacityAnim, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [menuVisible]);
   const handleSaveName = () => {
     if (name.trim()) {
       updateProfile({ name: name.trim() });
@@ -27,21 +61,25 @@ export default function MyProfileScreen({ navigation }) {
       Alert.alert('Success', 'Name updated');
     }
   };
-
   const handleSaveBio = () => {
     updateProfile({ bio: bio.trim() });
     setIsEditingBio(false);
     Alert.alert('Success', 'Bio updated');
   };
-
   const handleChangePhoto = () => {
-    Alert.alert('Change Photo', 'Photo picker coming soon!');
+    setMenuVisible(true);
   };
-
+  const handleMenuOption = (option) => {
+    setMenuVisible(false);
+    if (option === 'choose') {
+      setTimeout(() => navigation.navigate('ProfilePhoto'), 300);
+    } else if (option === 'remove') {
+      updateProfile({ photoUri: null });
+    }
+  };
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
-      
       <View style={styles.header}>
         <View style={styles.headerContent}>
           <TouchableOpacity 
@@ -50,26 +88,25 @@ export default function MyProfileScreen({ navigation }) {
           >
             <Ionicons name="chevron-back" size={28} color={colors.text} />
           </TouchableOpacity>
-          
           <Text style={styles.headerTitle}>My Profile</Text>
-
           <View style={styles.headerRight} />
         </View>
       </View>
-
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.profileSection}>
-          <TouchableOpacity style={styles.profileAvatar} onPress={handleChangePhoto}>
-            <Text style={styles.profileAvatarText}>{profile.avatar}</Text>
-            <View style={styles.cameraButton}>
-              <Ionicons name="camera" size={20} color={colors.text} />
-            </View>
+          <TouchableOpacity 
+            style={[styles.profileAvatar, { backgroundColor: profile.profileColor || '#FF3B30' }]} 
+            onPress={handleChangePhoto}
+          >
+            {profile.photoUri ? (
+              <Image source={{ uri: profile.photoUri }} style={styles.profileAvatarImage} />
+            ) : (
+              <Text style={styles.profileAvatarText}>{profile.avatar}</Text>
+            )}
           </TouchableOpacity>
         </View>
-
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>ACCOUNT</Text>
-          
           <View style={styles.card}>
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Name</Text>
@@ -106,26 +143,20 @@ export default function MyProfileScreen({ navigation }) {
                 </TouchableOpacity>
               )}
             </View>
-
             <View style={styles.divider} />
-
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Phone</Text>
               <Text style={styles.infoValue}>{profile.phone}</Text>
             </View>
-
             <View style={styles.divider} />
-
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Username</Text>
               <Text style={styles.infoValue}>@{profile.username}</Text>
             </View>
           </View>
         </View>
-
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>BIO</Text>
-          
           <View style={styles.card}>
             {isEditingBio ? (
               <View style={styles.bioEditContainer}>
@@ -171,10 +202,57 @@ export default function MyProfileScreen({ navigation }) {
           </View>
         </View>
       </ScrollView>
+      <Modal
+        visible={menuVisible}
+        transparent
+        animationType="none"
+        onRequestClose={() => setMenuVisible(false)}
+      >
+        <TouchableOpacity 
+          style={styles.overlay}
+          activeOpacity={1}
+          onPress={() => setMenuVisible(false)}
+        >
+          <Animated.View style={[styles.backdrop, { opacity: opacityAnim }]} />
+        </TouchableOpacity>
+        <Animated.View 
+          style={[
+            styles.menuContainer,
+            { transform: [{ translateY: slideAnim }] }
+          ]}
+        >
+          <View style={styles.menu}>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => handleMenuOption('choose')}
+              activeOpacity={0.6}
+            >
+              <View style={styles.menuItemContent}>
+                <Ionicons name="images-outline" size={22} color={colors.text} />
+                <Text style={styles.menuItemText}>Выбрать изображение</Text>
+              </View>
+            </TouchableOpacity>
+            {profile.photoUri && (
+              <>
+                <View style={styles.menuDivider} />
+                <TouchableOpacity 
+                  style={styles.menuItem}
+                  onPress={() => handleMenuOption('remove')}
+                  activeOpacity={0.6}
+                >
+                  <View style={styles.menuItemContent}>
+                    <Ionicons name="trash-outline" size={22} color={colors.error} />
+                    <Text style={[styles.menuItemText, styles.menuItemTextDanger]}>Удалить изображение</Text>
+                  </View>
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </Animated.View>
+      </Modal>
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -189,117 +267,119 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: 60,
-    paddingBottom: 16,
+    paddingHorizontal: 12,
+    paddingTop: 50,
+    paddingBottom: 12,
   },
   backButton: {
-    padding: 8,
+    padding: 6,
   },
   headerTitle: {
     fontSize: 17,
-    fontWeight: '600',
+    fontFamily: typography.semiBold,
     color: colors.text,
   },
   headerRight: {
-    width: 44,
+    width: 40,
   },
   content: {
     flex: 1,
   },
   profileSection: {
     alignItems: 'center',
-    paddingVertical: 32,
+    paddingVertical: 20,
   },
   profileAvatar: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#ffffff',
+    width: 90,
+    height: 90,
+    borderRadius: 45,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
+    overflow: 'hidden',
+  },
+  profileAvatarImage: {
+    width: '100%',
+    height: '100%',
   },
   profileAvatarText: {
-    fontSize: 48,
-    fontWeight: '500',
-    color: '#000000',
+    fontSize: 36,
+    fontFamily: typography.medium,
+    color: '#ffffff',
   },
   cameraButton: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.primary,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 3,
-    borderColor: colors.background,
   },
   section: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
   sectionTitle: {
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: 12,
+    fontFamily: typography.semiBold,
     color: colors.textSecondary,
-    paddingHorizontal: 16,
-    marginBottom: 8,
+    paddingHorizontal: 12,
+    marginBottom: 6,
   },
   card: {
     backgroundColor: colors.surface,
-    marginHorizontal: 16,
+    marginHorizontal: 12,
     borderRadius: 12,
-    padding: 16,
+    padding: 12,
   },
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 6,
   },
   infoLabel: {
-    fontSize: 16,
+    fontSize: 15,
     color: colors.text,
   },
   infoValue: {
-    fontSize: 16,
+    fontSize: 15,
     color: colors.textSecondary,
   },
   infoValueContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 6,
   },
   divider: {
     height: 0.5,
     backgroundColor: colors.separator,
-    marginVertical: 8,
+    marginVertical: 6,
   },
   editContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    marginLeft: 16,
-    gap: 8,
+    marginLeft: 12,
+    gap: 6,
   },
   editInput: {
     flex: 1,
     color: colors.text,
-    fontSize: 16,
-    padding: 8,
+    fontSize: 15,
+    padding: 6,
     backgroundColor: colors.inputBg,
-    borderRadius: 8,
+    borderRadius: 6,
     borderWidth: 1,
     borderColor: colors.border,
   },
   saveButton: {
-    padding: 4,
+    padding: 3,
   },
   cancelButton: {
-    padding: 4,
+    padding: 3,
   },
   bioContainer: {
     flexDirection: 'row',
@@ -308,22 +388,22 @@ const styles = StyleSheet.create({
   },
   bioText: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 15,
     color: colors.text,
-    lineHeight: 22,
+    lineHeight: 20,
   },
   bioEditContainer: {
-    gap: 12,
+    gap: 10,
   },
   bioInput: {
     color: colors.text,
-    fontSize: 16,
-    padding: 12,
+    fontSize: 15,
+    padding: 10,
     backgroundColor: colors.inputBg,
-    borderRadius: 8,
+    borderRadius: 6,
     borderWidth: 1,
     borderColor: colors.border,
-    minHeight: 80,
+    minHeight: 70,
     textAlignVertical: 'top',
   },
   bioActions: {
@@ -332,11 +412,56 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   bioCounter: {
-    fontSize: 13,
+    fontSize: 12,
     color: colors.textSecondary,
   },
   bioButtons: {
     flexDirection: 'row',
+    gap: 10,
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  menuContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: colors.surface,
+  },
+  menu: {
+    paddingTop: 16,
+    paddingBottom: 32,
+  },
+  menuItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+  },
+  menuItemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 12,
+  },
+  menuItemText: {
+    fontSize: 16,
+    fontFamily: typography.regular,
+    color: colors.text,
+  },
+  menuItemTextDanger: {
+    color: colors.error,
+  },
+  menuDivider: {
+    height: 0.5,
+    backgroundColor: colors.separator,
+    marginVertical: 6,
+    marginHorizontal: 20,
   },
 });
