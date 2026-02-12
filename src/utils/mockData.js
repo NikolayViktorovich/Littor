@@ -7,7 +7,6 @@ export const INITIAL_CHATS = [
   { id: '6', name: 'Saved Messages', lastMessage: 'Photo', time: '02:00', unread: 0, online: false, tags: ['FRONTEND', 'ФРИЛАНС'] },
   { id: '7', name: 'Клиент всегда прав', lastMessage: 'Дизайнер интерьера поделилась базовой кухней россиян в 2026 году. Го...', time: '01:53', unread: 0, online: false, muted: true },
 ];
-
 export const INITIAL_CONTACTS = [
   { id: '1', name: 'Маргарита Токарева', status: 'online', online: true },
   { id: '2', name: 'xenofluxide†', status: 'online', online: true },
@@ -20,14 +19,12 @@ export const INITIAL_CONTACTS = [
   { id: '9', name: 'Arina', status: 'last seen 21 minutes ago', online: false },
   { id: '10', name: 'Сабирка', status: 'last seen 25 minutes ago', online: false },
 ];
-
 export const INITIAL_CALLS = [
   { id: '1', name: 'Вика Мау Обои', type: 'missed', date: '10.11.25', time: '14:32' },
   { id: '2', name: 'Ярик Скоробогатов', type: 'outgoing', count: 3, date: '10.09.25', time: '12:15' },
   { id: '3', name: 'Владелец IGRAY', type: 'incoming', duration: '18 min', date: '29.05.25', time: '09:20' },
   { id: '4', name: 'Павлик', type: 'incoming', duration: '27 sec', date: '02.05.25', time: '16:45' },
 ];
-
 export const INITIAL_MESSAGES = {
   '6': [
     { 
