@@ -1,15 +1,20 @@
-import { View, Text, StyleSheet } from 'react-native';
-import { colors } from '../theme/colors';
-
-export const Avatar = ({ name, size = 52, online = false, style }) => {
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { colors, typography } from '../theme/colors';
+export const Avatar = ({ name, size = 52, online = false, style, photoUri, profileColor }) => {
   const initial = name ? name[0].toUpperCase() : '?';
   const avatarSize = { width: size, height: size, borderRadius: size / 2 };
   const textSize = { fontSize: size * 0.4 };
   const indicatorSize = size * 0.3;
-
+  const backgroundColor = profileColor || colors.surface;
   return (
-    <View style={[styles.avatar, avatarSize, style]}>
-      <Text style={[styles.avatarText, textSize]}>{initial}</Text>
+    <View style={[styles.avatar, avatarSize, { backgroundColor }, style]}>
+      {photoUri ? (
+        <Image source={{ uri: photoUri }} style={[styles.avatarImage, avatarSize]} />
+      ) : (
+        <Text style={[styles.avatarText, textSize, { color: '#ffffff' }]}>
+          {initial}
+        </Text>
+      )}
       {online && (
         <View
           style={[
@@ -26,16 +31,18 @@ export const Avatar = ({ name, size = 52, online = false, style }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   avatar: {
-    backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
   },
   avatarText: {
-    color: '#000000',
-    fontWeight: '500',
+    fontFamily: typography.medium,
   },
   onlineIndicator: {
     position: 'absolute',
