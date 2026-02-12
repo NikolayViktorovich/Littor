@@ -3,7 +3,6 @@ export const CALL_TYPES = {
   OUTGOING: 'outgoing',
   MISSED: 'missed',
 };
-
 export const MESSAGE_TYPES = {
   TEXT: 'text',
   IMAGE: 'image',
@@ -11,7 +10,6 @@ export const MESSAGE_TYPES = {
   AUDIO: 'audio',
   CHANNEL: 'channel',
 };
-
 export const STORAGE_KEYS = {
   CHATS: '@chats',
   CONTACTS: '@contacts',
@@ -21,7 +19,6 @@ export const STORAGE_KEYS = {
   ARCHIVED_CHATS: '@archived_chats',
   INITIALIZED: '@initialized',
 };
-
 export const FILTERS = {
   CALLS: {
     ALL: 'all',

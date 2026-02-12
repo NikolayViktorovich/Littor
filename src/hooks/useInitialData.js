@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { INITIAL_CHATS, INITIAL_CONTACTS, INITIAL_CALLS, INITIAL_MESSAGES } from '../utils/mockData';
-
 const STORAGE_KEYS = {
   CHATS: '@chats',
   CONTACTS: '@contacts',
@@ -9,16 +8,13 @@ const STORAGE_KEYS = {
   MESSAGES: '@messages',
   INITIALIZED: '@initialized',
 };
-
 export const useInitialData = () => {
   useEffect(() => {
     initializeData();
   }, []);
-
   const initializeData = async () => {
     try {
       const initialized = await AsyncStorage.getItem(STORAGE_KEYS.INITIALIZED);
-      
       if (!initialized) {
         await Promise.all([
           AsyncStorage.setItem(STORAGE_KEYS.CHATS, JSON.stringify(INITIAL_CHATS)),
