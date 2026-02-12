@@ -1,13 +1,11 @@
 import { Modal, View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
+import { colors, typography } from '../theme/colors';
 import { useEffect, useRef } from 'react';
-
-export const ChatMenu = ({ visible, onClose, onSelectOption, isBlocked }) => {
+export const ChatMenu = ({ visible, onClose, onSelectOption, isBlocked, chatId, navigation }) => {
   const slideAnim = useRef(new Animated.Value(300)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
-
   useEffect(() => {
     if (visible) {
       Animated.parallel([
@@ -38,7 +36,6 @@ export const ChatMenu = ({ visible, onClose, onSelectOption, isBlocked }) => {
       ]).start();
     }
   }, [visible]);
-
   const menuItems = [
     { id: 'wallpaper', icon: 'brush-outline', title: 'Change Wallpaper', color: colors.text },
     { id: 'secret', icon: 'lock-closed-outline', title: 'Start Secret Chat', color: colors.text },
@@ -52,12 +49,15 @@ export const ChatMenu = ({ visible, onClose, onSelectOption, isBlocked }) => {
       color: colors.error 
     },
   ];
-
   const handleSelect = (id) => {
-    onSelectOption(id);
-    onClose();
+    if (id === 'wallpaper' && navigation && chatId) {
+      onClose();
+      navigation.navigate('ChatWallpaper', { chatId });
+    } else {
+      onSelectOption(id);
+      onClose();
+    }
   };
-
   return (
     <Modal
       visible={visible}
@@ -72,7 +72,6 @@ export const ChatMenu = ({ visible, onClose, onSelectOption, isBlocked }) => {
       >
         <Animated.View style={[styles.backdrop, { opacity: opacityAnim }]} />
       </TouchableOpacity>
-
       <Animated.View 
         style={[
           styles.menuContainer,
@@ -84,7 +83,6 @@ export const ChatMenu = ({ visible, onClose, onSelectOption, isBlocked }) => {
             if (item.id === 'divider') {
               return <View key={index} style={styles.divider} />;
             }
-
             return (
               <TouchableOpacity
                 key={item.id}
@@ -106,7 +104,6 @@ export const ChatMenu = ({ visible, onClose, onSelectOption, isBlocked }) => {
     </Modal>
   );
 };
-
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
@@ -114,7 +111,7 @@ const styles = StyleSheet.create({
   },
   backdrop: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   menuContainer: {
     position: 'absolute',
@@ -140,7 +137,7 @@ const styles = StyleSheet.create({
   },
   menuItemText: {
     fontSize: 17,
-    fontWeight: '400',
+    fontFamily: typography.regular,
   },
   divider: {
     height: 0.5,
