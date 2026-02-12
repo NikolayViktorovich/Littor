@@ -5,30 +5,26 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
-  TextInput,
   StatusBar,
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
+import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
-
+import { SearchBar } from '../components/SearchBar';
 export default function ContactsScreen({ navigation }) {
   const { contacts, createChat, addContact } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
-
   const filteredContacts = useMemo(() => {
     if (!searchQuery.trim()) return contacts;
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [contacts, searchQuery]);
-
   const handleContactPress = (contact) => {
     const chat = createChat(contact);
     navigation.navigate('Chat', { chat });
   };
-
   const handleAddContact = () => {
     Alert.prompt(
       'Add Contact',
@@ -47,7 +43,6 @@ export default function ContactsScreen({ navigation }) {
       'plain-text'
     );
   };
-
   const renderContact = ({ item }) => (
     <TouchableOpacity
       style={styles.contactItem}
@@ -58,7 +53,6 @@ export default function ContactsScreen({ navigation }) {
         <Text style={styles.avatarText}>{item.name[0].toUpperCase()}</Text>
         {item.online && <View style={styles.onlineIndicator} />}
       </View>
-      
       <View style={styles.contactInfo}>
         <Text style={styles.contactName}>{item.name}</Text>
         <Text style={[styles.contactStatus, item.online && styles.contactStatusOnline]}>
@@ -67,39 +61,28 @@ export default function ContactsScreen({ navigation }) {
       </View>
     </TouchableOpacity>
   );
-
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
-      
       <View style={styles.header}>
         <TouchableOpacity style={styles.sortButton}>
           <Text style={styles.sortButtonText}>Sort</Text>
         </TouchableOpacity>
-        
         <Text style={styles.headerTitle}>Contacts</Text>
-
         <TouchableOpacity style={styles.addButton} onPress={handleAddContact}>
           <Ionicons name="add" size={24} color={colors.text} />
         </TouchableOpacity>
       </View>
-
-      <View style={styles.searchContainer}>
-        <Ionicons name="search" size={20} color={colors.textTertiary} style={{ marginRight: 8 }} />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search"
-          placeholderTextColor={colors.textTertiary}
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
-      </View>
-
+      <SearchBar
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        placeholder="Search"
+        style={styles.searchBar}
+      />
       <TouchableOpacity style={styles.inviteButton}>
         <Ionicons name="person-add-outline" size={22} color="#ffffff" />
         <Text style={styles.inviteText}>Invite Friends</Text>
       </TouchableOpacity>
-
       <FlatList
         data={filteredContacts}
         renderItem={renderContact}
@@ -115,7 +98,6 @@ export default function ContactsScreen({ navigation }) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -139,11 +121,11 @@ const styles = StyleSheet.create({
   sortButtonText: {
     color: colors.text,
     fontSize: 15,
-    fontWeight: '500',
+    fontFamily: typography.medium,
   },
   headerTitle: {
     fontSize: 17,
-    fontWeight: '600',
+    fontFamily: typography.semiBold,
     color: colors.text,
   },
   addButton: {
@@ -154,20 +136,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  searchBar: {
     marginHorizontal: 16,
     marginBottom: 12,
-    backgroundColor: 'rgba(28, 28, 30, 0.8)',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  searchInput: {
-    flex: 1,
-    color: colors.text,
-    fontSize: 16,
   },
   inviteButton: {
     flexDirection: 'row',
@@ -179,7 +150,7 @@ const styles = StyleSheet.create({
   inviteText: {
     fontSize: 16,
     color: '#ffffff',
-    fontWeight: '500',
+    fontFamily: typography.medium,
   },
   list: {
     flex: 1,
@@ -214,7 +185,7 @@ const styles = StyleSheet.create({
   avatarText: {
     color: '#000000',
     fontSize: 20,
-    fontWeight: '500',
+    fontFamily: typography.medium,
   },
   onlineIndicator: {
     position: 'absolute',
@@ -233,7 +204,7 @@ const styles = StyleSheet.create({
   },
   contactName: {
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: typography.medium,
     color: colors.text,
     marginBottom: 2,
   },
