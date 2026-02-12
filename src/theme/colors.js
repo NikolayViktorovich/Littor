@@ -1,5 +1,5 @@
 export const colors = {
-  background: '#000000',
+  background: '#0a0a0a',
   surface: '#1c1c1e',
   surfaceLight: '#2c2c2e',
   card: '#1c1c1e',
@@ -17,4 +17,12 @@ export const colors = {
   muted: '#8e8e93',
   inputBg: '#1c1c1e',
   separator: '#38383a',
+};
+export const typography = {
+  light: 'Manrope-Light',
+  regular: 'Manrope-Regular',
+  medium: 'Manrope-Medium',
+  semiBold: 'Manrope-SemiBold',
+  bold: 'Manrope-Bold',
+  extraBold: 'Manrope-ExtraBold',
 };
