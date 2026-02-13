@@ -11,18 +11,18 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 const CHAT_COLORS = [
-  { id: '1', color: '#FF3B30', name: 'Red' },
-  { id: '2', color: '#FF9500', name: 'Orange' },
-  { id: '3', color: '#FFCC00', name: 'Yellow' },
-  { id: '4', color: '#34C759', name: 'Green' },
-  { id: '5', color: '#00C7BE', name: 'Teal' },
-  { id: '6', color: '#32ADE6', name: 'Blue' },
-  { id: '7', color: '#007AFF', name: 'Dark Blue' },
-  { id: '8', color: '#5856D6', name: 'Purple' },
-  { id: '9', color: '#AF52DE', name: 'Violet' },
-  { id: '10', color: '#FF2D55', name: 'Pink' },
-  { id: '11', color: '#A2845E', name: 'Brown' },
-  { id: '12', color: '#8E8E93', name: 'Gray' },
+  { id: '1', color: '#FF3B30', name: 'Красный' },
+  { id: '2', color: '#FF9500', name: 'Оранжевый' },
+  { id: '3', color: '#FFCC00', name: 'Жёлтый' },
+  { id: '4', color: '#34C759', name: 'Зелёный' },
+  { id: '5', color: '#00C7BE', name: 'Бирюзовый' },
+  { id: '6', color: '#32ADE6', name: 'Синий' },
+  { id: '7', color: '#007AFF', name: 'Тёмно-синий' },
+  { id: '8', color: '#5856D6', name: 'Фиолетовый' },
+  { id: '9', color: '#AF52DE', name: 'Фиалковый' },
+  { id: '10', color: '#FF2D55', name: 'Розовый' },
+  { id: '11', color: '#A2845E', name: 'Коричневый' },
+  { id: '12', color: '#8E8E93', name: 'Серый' },
 ];
 export default function ChatColorScreen({ route, navigation }) {
   const { chatId } = route.params;
@@ -43,7 +43,7 @@ export default function ChatColorScreen({ route, navigation }) {
         >
           <Ionicons name="chevron-back" size={28} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Chat Color</Text>
+        <Text style={styles.headerTitle}>Цвет чата</Text>
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
           <Text style={styles.saveButtonText}>Save</Text>
         </TouchableOpacity>
@@ -52,24 +52,24 @@ export default function ChatColorScreen({ route, navigation }) {
         <View style={styles.previewSection}>
           <View style={styles.previewChat}>
             <View style={styles.previewBubbleIncoming}>
-              <Text style={styles.previewTextIncoming}>Hey! How's it going?</Text>
+              <Text style={styles.previewTextIncoming}>Привет! Как дела?</Text>
               <Text style={styles.previewTime}>12:30</Text>
             </View>
             <View style={[styles.previewBubbleOwn, { backgroundColor: selectedColor }]}>
-              <Text style={styles.previewTextOwn}>Great! Just working on some stuff</Text>
+              <Text style={styles.previewTextOwn}>Отлично! Работаю над проектами</Text>
               <View style={styles.previewFooter}>
                 <Text style={styles.previewTimeOwn}>12:31</Text>
                 <Ionicons name="checkmark-done" size={14} color="rgba(255,255,255,0.7)" />
               </View>
             </View>
             <View style={styles.previewBubbleIncoming}>
-              <Text style={styles.previewTextIncoming}>Nice! 👍</Text>
+              <Text style={styles.previewTextIncoming}>Круто! 👍</Text>
               <Text style={styles.previewTime}>12:31</Text>
             </View>
           </View>
         </View>
         <View style={styles.colorsSection}>
-          <Text style={styles.sectionTitle}>SELECT COLOR</Text>
+          <Text style={styles.sectionTitle}>ВЫБРАТЬ ЦВЕТ</Text>
           <ScrollView 
             horizontal 
             showsHorizontalScrollIndicator={false}
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   },
   previewChat: {
     backgroundColor: colors.surface,
-    borderRadius: 16,
+    borderRadius: 25,
     padding: 16,
     gap: 12,
   },
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceLight,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: 16,
+    borderRadius: 25,
     borderTopLeftRadius: 4,
     alignSelf: 'flex-start',
     maxWidth: '75%',
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   previewBubbleOwn: {
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: 16,
+    borderRadius: 25,
     borderTopRightRadius: 4,
     alignSelf: 'flex-end',
     maxWidth: '75%',
