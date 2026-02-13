@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',
-    borderRadius: 25,
+    borderRadius: 27,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     width: '88%',
   },
   blurContainer: {
-    borderRadius: 25,
+    borderRadius: 27,
     overflow: 'hidden',
   },
   glassOverlay: {
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(18, 18, 20, 0.05)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 25,
+    borderRadius: 27,
   },
   content: {
     flexDirection: 'row',
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     top: 0,
-    borderRadius: 20,
+    borderRadius: 30,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -201,13 +201,13 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   closeButtonWrapper: {
-    borderRadius: 20,
+    borderRadius: 30,
     overflow: 'hidden',
   },
   closeButton: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
@@ -221,6 +221,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(18, 18, 20, 0.2)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.15)',
-    borderRadius: 20,
+    borderRadius: 30,
   },
 });
