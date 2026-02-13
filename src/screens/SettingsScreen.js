@@ -3,7 +3,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
   StatusBar,
   Alert,
   Image,
@@ -15,14 +14,19 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 const MENU_ITEMS = [
-  { id: '1', icon: 'person-outline', title: 'My Profile', hasArrow: true, action: 'profile' },
-  { id: '2', icon: 'bookmark-outline', title: 'Saved Messages', hasArrow: true, action: 'saved' },
-  { id: '3', icon: 'call-outline', title: 'Recent Calls', hasArrow: true, action: 'calls' },
-  { id: '4', icon: 'phone-portrait-outline', title: 'Devices', hasArrow: true, action: 'devices' },
-  { id: '5', icon: 'notifications-outline', title: 'Notifications', hasArrow: true, action: 'notifications' },
-  { id: '6', icon: 'lock-closed-outline', title: 'Privacy & Security', hasArrow: true, action: 'privacy' },
-  { id: '7', icon: 'folder-outline', title: 'Data & Storage', hasArrow: true, action: 'data' },
-  { id: '8', icon: 'help-circle-outline', title: 'Help', hasArrow: true, action: 'help' },
+  { id: '1', icon: 'person', title: 'Профиль', hasArrow: true, action: 'profile', color: '#0A84FF' },
+  { id: '2', icon: 'wallet', title: 'Кошелёк', hasArrow: true, action: 'wallet', color: '#FF9500' },
+  { id: '3', icon: 'bookmark', title: 'Сохранённые сообщения', hasArrow: true, action: 'saved', color: '#5856D6' },
+  { id: '4', icon: 'call', title: 'Недавние звонки', hasArrow: true, action: 'calls', color: '#34C759' },
+  { id: '5', icon: 'phone-portrait', title: 'Устройства', hasArrow: true, action: 'devices', color: '#FF2D55' },
+  { id: '6', icon: 'notifications', title: 'Уведомления', hasArrow: true, action: 'notifications', color: '#FF3B30' },
+  { id: '7', icon: 'lock-closed', title: 'Приватность и безопасность', hasArrow: true, action: 'privacy', color: '#FF9500' },
+  { id: '8', icon: 'folder', title: 'Данные и память', hasArrow: true, action: 'data', color: '#32ADE6' },
+  { id: '9', icon: 'help-circle', title: 'Помощь', hasArrow: true, action: 'help', color: '#0A84FF' },
+];
+const CUSTOMIZE_ITEMS = [
+  { id: 'c2', icon: 'color-palette', title: 'Цвет профиля', action: 'color', color: '#AF52DE' },
+  { id: 'c3', icon: 'camera', title: 'Фото профиля', action: 'photo', color: '#5856D6' },
 ];
 export default function SettingsScreen({ navigation }) {
   const { profile, updateProfile } = useApp();
@@ -30,6 +34,7 @@ export default function SettingsScreen({ navigation }) {
   const [menuVisible, setMenuVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(300)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
+  const accentColor = profile.profileColor || '#0A84FF';
   useEffect(() => {
     if (menuVisible) {
       Animated.parallel([
@@ -62,12 +67,12 @@ export default function SettingsScreen({ navigation }) {
   }, [menuVisible]);
   const handleEditProfile = () => {
     Alert.prompt(
-      'Edit Name',
-      'Enter your new name',
+      'Имя профиля',
+      'Введите новое имя',
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: 'Отмена', style: 'cancel' },
         {
-          text: 'Save',
+          text: 'Сохранить',
           onPress: (name) => {
             if (name && name.trim()) {
               updateProfile({ name: name.trim() });
@@ -91,6 +96,18 @@ export default function SettingsScreen({ navigation }) {
     }
   };
   const handleMenuItemPress = (item) => {
+    if (item.action === 'color') {
+      navigation.navigate('ProfileColor');
+      return;
+    }
+    if (item.action === 'photo') {
+      handleChangePhoto();
+      return;
+    }
+    if (item.action === 'wallet') {
+      Alert.alert('Скоро', 'Кошелёк сейчас в разработке');
+      return;
+    }
     if (item.action === 'profile') {
       navigation.navigate('MyProfile');
     } else if (item.action === 'saved') {
@@ -108,7 +125,7 @@ export default function SettingsScreen({ navigation }) {
     } else if (item.action === 'help') {
       navigation.navigate('Help');
     } else {
-      Alert.alert('Coming Soon', `${item.title} feature is under development`);
+      Alert.alert('Скоро', 'Кошелёк сейчас в разработке');
     }
   };
   const headerOpacity = scrollY.interpolate({
@@ -116,31 +133,35 @@ export default function SettingsScreen({ navigation }) {
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
-  const MenuItem = ({ icon, title, badge, hasArrow, action }) => (
+  const MenuItem = ({ icon, title, hasArrow, action, color }) => (
     <TouchableOpacity
       style={styles.menuItem}
-      activeOpacity={0.7}
-      onPress={() => handleMenuItemPress({ icon, title, badge, hasArrow, action })}
+      activeOpacity={0.6}
+      onPress={() => handleMenuItemPress({ icon, title, hasArrow, action })}
     >
-      <View style={styles.menuIcon}>
-        <Ionicons name={icon} size={20} color={colors.primary} />
+      <View style={[styles.iconContainer, { backgroundColor: color || '#0A84FF' }]}>
+        <Ionicons name={icon} size={20} color="#ffffff" />
       </View>
       <Text style={styles.menuTitle}>{title}</Text>
-      <View style={styles.menuRight}>
-        {badge && <Text style={styles.menuBadge}>{badge}</Text>}
-        {hasArrow && <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />}
-      </View>
+      {hasArrow && <Ionicons name="chevron-forward" size={20} color={colors.textTertiary} />}
     </TouchableOpacity>
   );
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
       <Animated.View style={[styles.header, { opacity: headerOpacity }]}>
-        <Text style={styles.headerTitle}>Settings</Text>
+        <View style={styles.headerContent}>
+          <View style={styles.headerSide} />
+          <Text style={styles.headerTitle}>Настройки</Text>
+          <TouchableOpacity style={styles.headerAction} onPress={handleEditProfile} activeOpacity={0.8}>
+            <Text style={styles.headerActionText}>Править</Text>
+          </TouchableOpacity>
+        </View>
       </Animated.View>
       <Animated.ScrollView 
         style={styles.content} 
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: true }
@@ -149,7 +170,7 @@ export default function SettingsScreen({ navigation }) {
       >
         <View style={styles.profileSection}>
           <TouchableOpacity 
-            style={[styles.profileAvatar, { backgroundColor: profile.profileColor || '#FF3B30' }]}
+            style={[styles.profileAvatar, { backgroundColor: accentColor }]}
             onPress={handleChangePhoto}
             activeOpacity={0.8}
           >
@@ -159,62 +180,34 @@ export default function SettingsScreen({ navigation }) {
               <Text style={styles.profileAvatarText}>{profile.avatar}</Text>
             )}
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleEditProfile} activeOpacity={0.7}>
-            <Text style={styles.profileName}>{profile.name}</Text>
-          </TouchableOpacity>
+          <Text style={styles.profileName}>{profile.name}</Text>
           <Text style={styles.profileDetails}>
             {profile.phone} • @{profile.username}
           </Text>
           {profile.bio && (
-            <Text style={styles.profileBio}>{profile.bio}</Text>
+            <Text style={styles.profileBio} numberOfLines={2}>
+              {profile.bio}
+            </Text>
           )}
         </View>
-        <View style={styles.customizeSection}>
-          <Text style={styles.sectionTitle}>CUSTOMIZE</Text>
-          <View style={styles.customizeCard}>
-            <TouchableOpacity 
-              style={styles.customizeItem} 
-              activeOpacity={0.7}
-              onPress={() => navigation.navigate('ProfileColor')}
-            >
-              <View style={styles.customizeIconContainer}>
-                <View style={[styles.colorPreview, { backgroundColor: profile.profileColor || '#FF3B30' }]}>
-                  <Ionicons name="color-palette" size={20} color="#ffffff" />
-                </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>АККАУНТ</Text>
+          <View style={styles.sectionCard}>
+            {CUSTOMIZE_ITEMS.map((item, index) => (
+              <View key={item.id}>
+                <MenuItem
+                  icon={item.icon}
+                  title={item.title}
+                  hasArrow
+                  action={item.action}
+                />
+                {index < CUSTOMIZE_ITEMS.length - 1 && <View style={styles.menuDivider} />}
               </View>
-              <View style={styles.customizeContent}>
-                <Text style={styles.customizeTitle}>Profile Color</Text>
-                <Text style={styles.customizeSubtitle}>Personalize your profile</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={22} color={colors.textTertiary} />
-            </TouchableOpacity>
-            <View style={styles.customizeDivider} />
-            <TouchableOpacity 
-              style={styles.customizeItem} 
-              activeOpacity={0.7}
-              onPress={handleChangePhoto}
-            >
-              <View style={styles.customizeIconContainer}>
-                <View style={styles.photoPreview}>
-                  {profile.photoUri ? (
-                    <Image source={{ uri: profile.photoUri }} style={styles.photoPreviewImage} />
-                  ) : (
-                    <View style={[styles.photoPreviewPlaceholder, { backgroundColor: profile.profileColor || '#FF3B30' }]}>
-                      <Text style={styles.photoPreviewText}>{profile.avatar}</Text>
-                    </View>
-                  )}
-                </View>
-              </View>
-              <View style={styles.customizeContent}>
-                <Text style={styles.customizeTitle}>Profile Photo</Text>
-                <Text style={styles.customizeSubtitle}>Change your avatar</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={22} color={colors.textTertiary} />
-            </TouchableOpacity>
+            ))}
           </View>
         </View>
         <View style={styles.menuSection}>
-          <Text style={styles.sectionTitle}>SETTINGS</Text>
+          <Text style={styles.sectionTitle}>НАСТРОЙКИ</Text>
           <View style={styles.menuCard}>
             {MENU_ITEMS.map((item, index) => (
               <View key={item.id}>
@@ -226,7 +219,7 @@ export default function SettingsScreen({ navigation }) {
         </View>
         <View style={styles.footer}>
           <Text style={styles.footerText}>Littor Messenger</Text>
-          <Text style={styles.footerVersion}>Version 1.0.0</Text>
+          <Text style={styles.footerVersion}>Версия 1.0.0</Text>
         </View>
       </Animated.ScrollView>
       <Modal
@@ -255,7 +248,7 @@ export default function SettingsScreen({ navigation }) {
               activeOpacity={0.6}
             >
               <View style={styles.menuItemContent}>
-                <Ionicons name="images-outline" size={22} color={colors.text} />
+                <Ionicons name="images" size={22} color={colors.text} />
                 <Text style={styles.menuItemText}>Выбрать изображение</Text>
               </View>
             </TouchableOpacity>
@@ -268,7 +261,7 @@ export default function SettingsScreen({ navigation }) {
                   activeOpacity={0.6}
                 >
                   <View style={styles.menuItemContent}>
-                    <Ionicons name="trash-outline" size={22} color={colors.error} />
+                    <Ionicons name="trash" size={22} color={colors.error} />
                     <Text style={[styles.menuItemText, styles.menuItemTextDanger]}>Удалить изображение</Text>
                   </View>
                 </TouchableOpacity>
@@ -298,195 +291,132 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.separator,
     zIndex: 10,
   },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerSide: {
+    width: 48,
+  },
   headerTitle: {
     fontSize: 17,
     fontFamily: typography.semiBold,
     color: colors.text,
-    textAlign: 'center',
+  },
+  headerAction: {
+    width: 48,
+    alignItems: 'flex-end',
+  },
+  headerActionText: {
+    fontSize: 15,
+    color: colors.textSecondary,
+    fontFamily: typography.medium,
   },
   content: {
     flex: 1,
   },
+  scrollContent: {
+    paddingTop: 72,
+    paddingBottom: 90,
+  },
   profileSection: {
     alignItems: 'center',
-    paddingTop: 80,
-    paddingBottom: 20,
-    paddingHorizontal: 12,
+    paddingTop: 6,
+    paddingBottom: 16,
+    paddingHorizontal: 16,
   },
   profileAvatar: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 12,
     overflow: 'hidden',
     position: 'relative',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 4,
+    marginBottom: 12,
   },
   profileAvatarImage: {
     width: '100%',
     height: '100%',
   },
   profileAvatarText: {
-    fontSize: 36,
+    fontSize: 30,
     fontFamily: typography.semiBold,
     color: '#ffffff',
   },
-  avatarBadge: {
-    position: 'absolute',
-    bottom: 2,
-    right: 2,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   profileName: {
-    fontSize: 22,
+    fontSize: 20,
     fontFamily: typography.bold,
     color: colors.text,
     marginBottom: 4,
   },
   profileDetails: {
-    fontSize: 14,
+    fontSize: 13,
     color: colors.textSecondary,
-    marginBottom: 6,
+    textAlign: 'center',
   },
   profileBio: {
-    fontSize: 14,
-    color: colors.text,
-    textAlign: 'center',
-    marginTop: 6,
-    paddingHorizontal: 24,
+    fontSize: 13,
+    color: colors.textSecondary,
     lineHeight: 18,
-  },
-  customizeSection: {
-    marginBottom: 16,
+    textAlign: 'center',
+    marginTop: 8,
+    paddingHorizontal: 12,
   },
   sectionTitle: {
-    fontSize: 12,
+    fontSize: 11,
     fontFamily: typography.bold,
     color: colors.textSecondary,
-    paddingHorizontal: 12,
-    marginBottom: 8,
-    letterSpacing: 0.5,
+    paddingHorizontal: 16,
+    marginBottom: 6,
+    letterSpacing: 0.4,
   },
-  customizeCard: {
-    marginHorizontal: 12,
-    borderRadius: 12,
+  section: {
+    marginBottom: 16,
+  },
+  sectionCard: {
+    marginHorizontal: 16,
+    borderRadius: 20,
     backgroundColor: colors.surface,
     overflow: 'hidden',
-  },
-  customizeItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-  },
-  customizeIconContainer: {
-    marginRight: 12,
-  },
-  colorPreview: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  photoPreview: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    overflow: 'hidden',
-  },
-  photoPreviewImage: {
-    width: '100%',
-    height: '100%',
-  },
-  photoPreviewPlaceholder: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  photoPreviewText: {
-    fontSize: 20,
-    fontFamily: typography.semiBold,
-    color: '#ffffff',
-  },
-  customizeContent: {
-    flex: 1,
-  },
-  customizeTitle: {
-    fontSize: 15,
-    fontFamily: typography.medium,
-    color: colors.text,
-    marginBottom: 1,
-  },
-  customizeSubtitle: {
-    fontSize: 12,
-    color: colors.textSecondary,
-  },
-  customizeDivider: {
-    height: 0.5,
-    backgroundColor: colors.separator,
-    marginLeft: 68,
   },
   menuSection: {
     marginBottom: 16,
   },
   menuCard: {
-    marginHorizontal: 12,
-    borderRadius: 12,
+    marginHorizontal: 16,
+    borderRadius: 20,
     backgroundColor: colors.surface,
     overflow: 'hidden',
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
-  menuIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: colors.surfaceLight,
+  iconContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
   },
+  menuIcon: {
+    marginRight: 12,
+  },
   menuTitle: {
-    flex: 1,
     fontSize: 15,
     color: colors.text,
-    fontFamily: typography.medium,
-  },
-  menuRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  menuBadge: {
-    fontSize: 14,
-    color: colors.textSecondary,
+    fontFamily: typography.regular,
+    flex: 1,
   },
   menuDivider: {
-    height: 0.5,
+    height: 0.33,
     backgroundColor: colors.separator,
-    marginLeft: 60,
+    marginLeft: 56,
   },
   footer: {
     alignItems: 'center',
