@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { SearchBar } from '../components/SearchBar';
+import { LiquidGlassButton } from '../components/LiquidGlassButton';
 export default function ContactsScreen({ navigation }) {
   const { contacts, createChat, addContact } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
@@ -27,12 +28,12 @@ export default function ContactsScreen({ navigation }) {
   };
   const handleAddContact = () => {
     Alert.prompt(
-      'Add Contact',
-      'Enter contact name',
+      'Новый контакт',
+      'Введите имя контакта',
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: 'Отмена', style: 'cancel' },
         {
-          text: 'Add',
+          text: 'Добавить',
           onPress: (name) => {
             if (name && name.trim()) {
               addContact({ name: name.trim() });
@@ -65,23 +66,36 @@ export default function ContactsScreen({ navigation }) {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
       <View style={styles.header}>
-        <TouchableOpacity style={styles.sortButton}>
-          <Text style={styles.sortButtonText}>Sort</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Contacts</Text>
-        <TouchableOpacity style={styles.addButton} onPress={handleAddContact}>
-          <Ionicons name="add" size={24} color={colors.text} />
-        </TouchableOpacity>
+        <LiquidGlassButton 
+          style={styles.sortButton}
+          showBlob={true}
+        >
+          <View style={styles.sortButtonContent}>
+            <Text style={styles.sortButtonText}>Изм.</Text>
+          </View>
+        </LiquidGlassButton>
+        <View style={styles.headerCenter}>
+          <Text style={styles.headerTitle}>Контакты</Text>
+        </View>
+        <LiquidGlassButton 
+          style={styles.addButton} 
+          onPress={handleAddContact}
+          showBlob={true}
+        >
+          <View style={styles.addButtonContent}>
+            <Ionicons name="add-circle" size={24} color={colors.text} />
+          </View>
+        </LiquidGlassButton>
       </View>
       <SearchBar
         value={searchQuery}
         onChangeText={setSearchQuery}
-        placeholder="Search"
+        placeholder="Поиск"
         style={styles.searchBar}
       />
       <TouchableOpacity style={styles.inviteButton}>
-        <Ionicons name="person-add-outline" size={22} color="#ffffff" />
-        <Text style={styles.inviteText}>Invite Friends</Text>
+        <Ionicons name="person-add" size={20} color={colors.primary} />
+        <Text style={styles.inviteText}>Пригласить друзей</Text>
       </TouchableOpacity>
       <FlatList
         data={filteredContacts}
@@ -91,7 +105,7 @@ export default function ContactsScreen({ navigation }) {
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No contacts found</Text>
+            <Text style={styles.emptyText}>Контакты не найдены</Text>
           </View>
         }
       />
@@ -111,17 +125,34 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingBottom: 12,
     backgroundColor: colors.background,
+    position: 'relative',
   },
   sortButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    backgroundColor: 'rgba(28, 28, 30, 0.8)',
-    borderRadius: 20,
+    height: 36,
+    minWidth: 90,
+    paddingHorizontal: 16,
+    borderRadius: 18,
+    marginLeft: -12,
+  },
+  sortButtonContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   sortButtonText: {
     color: colors.text,
     fontSize: 15,
     fontFamily: typography.medium,
+  },
+  headerCenter: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 60,
+    bottom: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    pointerEvents: 'none',
   },
   headerTitle: {
     fontSize: 17,
@@ -132,7 +163,9 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(28, 28, 30, 0.8)',
+  },
+  addButtonContent: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -149,7 +182,7 @@ const styles = StyleSheet.create({
   },
   inviteText: {
     fontSize: 16,
-    color: '#ffffff',
+    color: colors.primary,
     fontFamily: typography.medium,
   },
   list: {
@@ -193,7 +226,7 @@ const styles = StyleSheet.create({
     right: 0,
     width: 16,
     height: 16,
-    borderRadius: 8,
+    borderRadius: 48,
     backgroundColor: colors.online,
     borderWidth: 3,
     borderColor: colors.background,
