@@ -24,16 +24,16 @@ export default function ArchivedChatsScreen({ navigation }) {
   }, [archivedChats, searchQuery]);
   const handleUnarchive = (chatId) => {
     unarchiveChat(chatId);
-    Alert.alert('Success', 'Chat has been unarchived');
+    Alert.alert('Готово', 'Чат разархивирован');
   };
   const handleDelete = (chatId) => {
     Alert.alert(
-      'Delete Chat',
-      'Are you sure you want to delete this chat?',
+      'Удалить чат',
+      'Вы уверены, что хотите удалить этот чат?',
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: 'Отмена', style: 'cancel' },
         { 
-          text: 'Delete', 
+          text: 'Удалить', 
           style: 'destructive', 
           onPress: () => deleteChat(chatId) 
         },
@@ -81,13 +81,13 @@ export default function ArchivedChatsScreen({ navigation }) {
             style={styles.editActionButton}
             onPress={() => handleUnarchive(item.id)}
           >
-            <Ionicons name="arrow-undo-outline" size={20} color={colors.text} />
+            <Ionicons name="arrow-undo" size={20} color={colors.text} />
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.editActionButton, styles.deleteButton]}
             onPress={() => handleDelete(item.id)}
           >
-            <Ionicons name="trash-outline" size={20} color={colors.error} />
+            <Ionicons name="trash" size={20} color={colors.error} />
           </TouchableOpacity>
         </View>
       )}
@@ -105,20 +105,20 @@ export default function ArchivedChatsScreen({ navigation }) {
             <Ionicons name="chevron-back" size={28} color={colors.text} />
           </TouchableOpacity>
           <View style={styles.headerCenter}>
-            <Text style={styles.headerTitle}>Archived Chats</Text>
-            <Text style={styles.headerSubtitle}>{archivedChats.length} chats</Text>
+            <Text style={styles.headerTitle}>Архивные чаты</Text>
+            <Text style={styles.headerSubtitle}>{archivedChats.length} чатов</Text>
           </View>
           <TouchableOpacity
             style={styles.editButton}
             onPress={() => setIsEditMode(!isEditMode)}
           >
-            <Text style={styles.editButtonText}>{isEditMode ? 'Done' : 'Edit'}</Text>
+            <Text style={styles.editButtonText}>{isEditMode ? 'Готово' : 'Править'}</Text>
           </TouchableOpacity>
         </View>
         <SearchBar
           value={searchQuery}
           onChangeText={setSearchQuery}
-          placeholder="Search archived chats"
+          placeholder="Поиск архивных чатов"
           style={styles.searchBar}
         />
       </View>
@@ -130,10 +130,10 @@ export default function ArchivedChatsScreen({ navigation }) {
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Ionicons name="archive-outline" size={64} color={colors.textTertiary} />
-            <Text style={styles.emptyText}>No archived chats</Text>
+            <Ionicons name="archive" size={64} color={colors.textTertiary} />
+            <Text style={styles.emptyText}>Нет архивных чатов</Text>
             <Text style={styles.emptySubtext}>
-              Archived chats will appear here
+              Архивные чаты появятся здесь
             </Text>
           </View>
         }
@@ -177,8 +177,9 @@ const styles = StyleSheet.create({
   editButton: {
     paddingVertical: 8,
     paddingHorizontal: 12,
+    minWidth: 90,
     backgroundColor: 'rgba(28, 28, 30, 0.8)',
-    borderRadius: 20,
+    borderRadius: 30,
   },
   editButtonText: {
     color: colors.text,
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
     right: 0,
     width: 16,
     height: 16,
-    borderRadius: 8,
+    borderRadius: 48,
     backgroundColor: colors.online,
     borderWidth: 3,
     borderColor: colors.background,
@@ -276,7 +277,7 @@ const styles = StyleSheet.create({
   },
   unreadBadge: {
     backgroundColor: colors.badge,
-    borderRadius: 10,
+    borderRadius: 24.0,
     minWidth: 20,
     height: 20,
     justifyContent: 'center',
@@ -299,7 +300,7 @@ const styles = StyleSheet.create({
   editActionButton: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 30,
     backgroundColor: 'rgba(28, 28, 30, 0.9)',
     justifyContent: 'center',
     alignItems: 'center',
