@@ -12,38 +12,57 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
+
 const { width } = Dimensions.get('window');
+
 const PROFILE_COLORS = [
-  { id: '1', color: '#007AFF', name: 'Blue', type: 'solid' },
-  { id: '2', color: '#34C759', name: 'Green', type: 'solid' },
-  { id: '3', color: '#FF9500', name: 'Orange', type: 'solid' },
-  { id: '4', color: '#FF3B30', name: 'Red', type: 'solid' },
-  { id: '5', color: '#5856D6', name: 'Purple', type: 'solid' },
-  { id: '6', color: '#00C7BE', name: 'Teal', type: 'solid' },
-  { id: '7', color: '#FF2D55', name: 'Pink', type: 'solid' },
-  { id: '8', color: '#32ADE6', name: 'Sky Blue', type: 'gradient', gradient: ['#32ADE6', '#007AFF'] },
-  { id: '9', color: '#34C759', name: 'Lime', type: 'gradient', gradient: ['#8BC34A', '#34C759'] },
-  { id: '10', color: '#FF9500', name: 'Sunset', type: 'gradient', gradient: ['#FFB84D', '#FF9500'] },
-  { id: '11', color: '#FF6B6B', name: 'Coral', type: 'gradient', gradient: ['#FF8A80', '#FF6B6B'] },
-  { id: '12', color: '#AF52DE', name: 'Violet', type: 'gradient', gradient: ['#C77FE8', '#AF52DE'] },
-  { id: '13', color: '#00C7BE', name: 'Aqua', type: 'gradient', gradient: ['#4DD9D1', '#00C7BE'] },
-  { id: '14', color: '#FF2D55', name: 'Rose', type: 'gradient', gradient: ['#FF6B8A', '#FF2D55'] },
-  { id: '15', color: '#FF6B6B', name: 'Rainbow 1', type: 'special', gradient: ['#FF6B6B', '#4ECDC4', '#45B7D1'] },
-  { id: '16', color: '#FFD93D', name: 'Rainbow 2', type: 'special', gradient: ['#FFD93D', '#6BCF7F', '#4D96FF'] },
-  { id: '17', color: '#FF6B9D', name: 'Rainbow 3', type: 'special', gradient: ['#FF6B9D', '#C44569', '#FFA07A'] },
-  { id: '18', color: '#4FACFE', name: 'Rainbow 4', type: 'special', gradient: ['#4FACFE', '#00F2FE', '#43E97B'] },
-  { id: '19', color: '#FA709A', name: 'Rainbow 5', type: 'special', gradient: ['#FA709A', '#FEE140', '#30CFD0'] },
-  { id: '20', color: '#A8EDEA', name: 'Rainbow 6', type: 'special', gradient: ['#A8EDEA', '#FED6E3', '#FFB6C1'] },
-  { id: '21', color: '#667EEA', name: 'Rainbow 7', type: 'special', gradient: ['#667EEA', '#764BA2', '#F093FB'] },
+  { id: '1', color: '#007AFF', name: 'Синий', category: 'Классика' },
+  { id: '2', color: '#34C759', name: 'Зелёный', category: 'Классика' },
+  { id: '3', color: '#FF9500', name: 'Оранжевый', category: 'Классика' },
+  { id: '4', color: '#FF3B30', name: 'Красный', category: 'Классика' },
+  { id: '5', color: '#5856D6', name: 'Фиолетовый', category: 'Классика' },
+  { id: '6', color: '#00C7BE', name: 'Бирюзовый', category: 'Классика' },
+  { id: '7', color: '#FF2D55', name: 'Розовый', category: 'Яркие' },
+  { id: '8', color: '#32ADE6', name: 'Небесный', category: 'Яркие' },
+  { id: '9', color: '#8BC34A', name: 'Лайм', category: 'Яркие' },
+  { id: '10', color: '#FFB84D', name: 'Янтарный', category: 'Яркие' },
+  { id: '11', color: '#FF6B6B', name: 'Коралловый', category: 'Яркие' },
+  { id: '12', color: '#AF52DE', name: 'Фиалковый', category: 'Яркие' },
+  { id: '13', color: '#A8E6CF', name: 'Мятный', category: 'Пастель' },
+  { id: '14', color: '#FFB3BA', name: 'Розовый', category: 'Пастель' },
+  { id: '15', color: '#BAE1FF', name: 'Голубой', category: 'Пастель' },
+  { id: '16', color: '#FFFFBA', name: 'Лимонный', category: 'Пастель' },
+  { id: '17', color: '#FFD9BA', name: 'Персиковый', category: 'Пастель' },
+  { id: '18', color: '#E0BBE4', name: 'Лавандовый', category: 'Пастель' },
+  { id: '19', color: '#1A535C', name: 'Океан', category: 'Тёмные' },
+  { id: '20', color: '#6A4C93', name: 'Сливовый', category: 'Тёмные' },
+  { id: '21', color: '#C44569', name: 'Винный', category: 'Тёмные' },
+  { id: '22', color: '#2C5F2D', name: 'Лесной', category: 'Тёмные' },
+  { id: '23', color: '#8B4513', name: 'Коричневый', category: 'Тёмные' },
+  { id: '24', color: '#2F4858', name: 'Морской', category: 'Тёмные' },
 ];
+
+const getColumnsCount = (screenWidth) => {
+  if (screenWidth >= 768) return 6;
+  if (screenWidth >= 600) return 5;
+  return 4;
+};
+
 export default function ProfileColorScreen({ navigation }) {
   const { profile, updateProfile } = useApp();
   const [selectedColor, setSelectedColor] = useState(profile.profileColor || '#FF3B30');
-  const handleSave = () => {
-    updateProfile({ profileColor: selectedColor });
-    navigation.goBack();
+  const [selectedCategory, setSelectedCategory] = useState('Classic');
+  const [screenWidth, setScreenWidth] = useState(width);
+
+  const categories = ['Классика', 'Яркие', 'Пастель', 'Тёмные'];
+  const filteredColors = PROFILE_COLORS.filter(c => c.category === selectedCategory);
+  const columnsCount = getColumnsCount(screenWidth);
+
+  const handleColorSelect = (color) => {
+    setSelectedColor(color);
+    updateProfile({ profileColor: color });
   };
-  const selectedColorData = PROFILE_COLORS.find(c => c.color === selectedColor);
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
@@ -51,11 +70,10 @@ export default function ProfileColorScreen({ navigation }) {
         <TouchableOpacity 
           style={styles.backButton}
           onPress={() => navigation.goBack()}
-          activeOpacity={0.7}
         >
-          <Ionicons name="chevron-back" size={24} color={colors.text} />
+          <Ionicons name="chevron-back" size={26} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Profile Color</Text>
+        <Text style={styles.headerTitle}>Цвет профиля</Text>
         <View style={styles.headerRight} />
       </View>
       <ScrollView 
@@ -64,72 +82,103 @@ export default function ProfileColorScreen({ navigation }) {
         contentContainerStyle={styles.scrollContent}
       >
         <View style={styles.previewCard}>
-          <View style={styles.avatarSection}>
-            <View style={[styles.avatarContainer, { backgroundColor: selectedColor }]}>
-              {profile.photoUri ? (
-                <Image source={{ uri: profile.photoUri }} style={styles.avatarImage} />
-              ) : (
-                <Text style={styles.avatarText}>{profile.avatar}</Text>
-              )}
-            </View>
-            <Text style={styles.profileName}>{profile.name}</Text>
-            <Text style={styles.profileStatus}>online</Text>
-          </View>
           <View style={styles.messagesPreview}>
-            <View style={[styles.messageBox, { backgroundColor: 'rgba(255, 255, 255, 0.1)' }]}>
-              <Text style={[styles.messageName, { color: selectedColor }]}>{profile.name}</Text>
-              <Text style={styles.messageText}>Reply to your message</Text>
+            <View style={styles.messageRow}>
+              <View style={[styles.messageBubble, styles.messageBubbleOther]}>
+                <Text style={styles.messageText}>Привет! Как дела?</Text>
+                <Text style={styles.messageTime}>12:30</Text>
+              </View>
             </View>
-            <View style={styles.messageDescription}>
-              <Text style={styles.descriptionText}>
-                Your name and replies to your messages will be shown in the selected color.
-              </Text>
+            <View style={[styles.messageRow, styles.messageRowOwn]}>
+              <View style={[styles.messageBubble, styles.messageBubbleOwn, { backgroundColor: selectedColor }]}>
+                <Text style={styles.messageTextOwn}>Отлично, спасибо!</Text>
+                <Text style={styles.messageTimeOwn}>12:31</Text>
+              </View>
             </View>
-            <View style={[styles.messageBox, { backgroundColor: 'rgba(255, 255, 255, 0.1)' }]}>
-              <Text style={styles.messageLinkTitle}>Link Preview</Text>
-              <Text style={styles.messageText}>
-                Previews of links you send will also use this color.
-              </Text>
-              <Text style={styles.messageTime}>23:20</Text>
+            <View style={styles.messageRow}>
+              <View style={[styles.messageBubble, styles.messageBubbleOther]}>
+                <Text style={styles.messageText}>Классный цвет 👍</Text>
+                <Text style={styles.messageTime}>12:32</Text>
+              </View>
             </View>
           </View>
-          <View style={styles.colorsGrid}>
-            {PROFILE_COLORS.map((item) => (
+
+          <View style={styles.hintBox}>
+            <Ionicons name="information-circle" size={18} color={colors.textSecondary} />
+            <Text style={styles.hintText}>
+              Ваши сообщения будут отображаться этим цветом
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.categoriesSection}>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.categoriesScroll}
+          >
+            {categories.map((category) => (
               <TouchableOpacity
-                key={item.id}
-                style={styles.colorItem}
-                onPress={() => setSelectedColor(item.color)}
+                key={category}
+                style={[
+                  styles.categoryChip,
+                  selectedCategory === category && styles.categoryChipActive
+                ]}
+                onPress={() => setSelectedCategory(category)}
                 activeOpacity={0.7}
               >
-                <View style={[
-                  styles.colorCircle, 
-                  { backgroundColor: item.color },
-                  selectedColor === item.color && styles.colorCircleSelected
+                <Text style={[
+                  styles.categoryText,
+                  selectedCategory === category && styles.categoryTextActive
                 ]}>
-                  {selectedColor === item.color && (
-                    <View style={styles.checkmarkRing}>
-                      <Ionicons name="checkmark" size={16} color="#ffffff" />
-                    </View>
-                  )}
-                </View>
+                  {category}
+                </Text>
               </TouchableOpacity>
             ))}
-          </View>
-          <TouchableOpacity style={styles.addIconsButton} activeOpacity={0.7}>
-            <Text style={styles.addIconsText}>Add Icons To Replies</Text>
-            <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
-          </TouchableOpacity>
-          <Text style={styles.footerText}>
-            This color will be used for your name, the links you send, and replies to your messages.
-          </Text>
+          </ScrollView>
         </View>
-        <TouchableOpacity style={styles.applyButton} onPress={handleSave} activeOpacity={0.8}>
-          <Text style={styles.applyButtonText}>Apply Style</Text>
-        </TouchableOpacity>
+
+        <View style={styles.colorsSection}>
+          <View style={styles.colorsGrid}>
+            {filteredColors.map((item, index) => {
+              const itemWidth = (screenWidth - 32 - (columnsCount - 1) * 12) / columnsCount;
+              return (
+                <TouchableOpacity
+                  key={item.id}
+                  style={[styles.colorItem, { width: itemWidth }]}
+                  onPress={() => handleColorSelect(item.color)}
+                  activeOpacity={0.7}
+                >
+                  <View style={[
+                    styles.colorCircle, 
+                    { backgroundColor: item.color },
+                    selectedColor === item.color && styles.colorCircleSelected
+                  ]}>
+                    {selectedColor === item.color && (
+                      <View style={styles.checkmarkContainer}>
+                        <Ionicons name="checkmark" size={24} color="#ffffff" />
+                      </View>
+                    )}
+                  </View>
+                  <Text 
+                    style={[
+                      styles.colorName,
+                      selectedColor === item.color && styles.colorNameSelected
+                    ]}
+                    numberOfLines={1}
+                  >
+                    {item.name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
       </ScrollView>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -141,168 +190,181 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 12,
     paddingTop: 50,
-    paddingBottom: 8,
-    backgroundColor: colors.background,
+    paddingBottom: 10,
+    borderBottomWidth: 0.5,
+    borderBottomColor: colors.separator,
   },
   backButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+    padding: 4,
   },
   headerTitle: {
-    fontSize: 17,
+    fontSize: 16,
     fontFamily: typography.semiBold,
     color: colors.text,
   },
   headerRight: {
-    width: 40,
+    width: 32,
   },
   content: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 80,
+    paddingBottom: 40,
   },
   previewCard: {
-    marginHorizontal: 12,
-    marginTop: 12,
-    borderRadius: 16,
     backgroundColor: colors.surface,
+    marginHorizontal: 16,
+    marginTop: 16,
+    borderRadius: 30,
     padding: 16,
     overflow: 'hidden',
   },
-  avatarSection: {
-    alignItems: 'center',
-    paddingVertical: 16,
-  },
-  avatarContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
-    overflow: 'hidden',
-  },
-  avatarImage: {
-    width: '100%',
-    height: '100%',
-  },
-  avatarText: {
-    fontSize: 32,
-    fontFamily: typography.bold,
-    color: '#ffffff',
-  },
-  profileName: {
-    fontSize: 18,
-    fontFamily: typography.semiBold,
-    color: colors.text,
-    marginBottom: 2,
-  },
-  profileStatus: {
-    fontSize: 13,
-    color: colors.textSecondary,
-  },
   messagesPreview: {
-    marginTop: 16,
-    gap: 10,
+    gap: 8,
+    marginBottom: 12,
   },
-  messageBox: {
+  messageRow: {
+    flexDirection: 'row',
+  },
+  messageRowOwn: {
+    justifyContent: 'flex-end',
+  },
+  messageBubble: {
+    maxWidth: '75%',
+    borderRadius: 27,
     padding: 10,
-    borderRadius: 10,
+    paddingHorizontal: 12,
   },
-  messageName: {
-    fontSize: 13,
-    fontFamily: typography.semiBold,
-    marginBottom: 3,
+  messageBubbleOther: {
+    backgroundColor: colors.surfaceLight,
+    borderBottomLeftRadius: 6,
   },
-  messageLinkTitle: {
-    fontSize: 13,
-    fontFamily: typography.semiBold,
-    color: colors.primary,
-    marginBottom: 3,
+  messageBubbleOwn: {
+    borderBottomRightRadius: 6,
   },
   messageText: {
-    fontSize: 13,
+    fontSize: 14,
     color: colors.text,
-    lineHeight: 17,
+    marginBottom: 2,
+    lineHeight: 18,
+  },
+  messageTextOwn: {
+    fontSize: 14,
+    color: '#ffffff',
+    marginBottom: 2,
+    lineHeight: 18,
   },
   messageTime: {
     fontSize: 11,
     color: colors.textTertiary,
-    marginTop: 3,
-    textAlign: 'right',
+    alignSelf: 'flex-end',
   },
-  messageDescription: {
-    paddingVertical: 6,
+  messageTimeOwn: {
+    fontSize: 11,
+    color: 'rgba(255, 255, 255, 0.7)',
+    alignSelf: 'flex-end',
   },
-  descriptionText: {
+  hintBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surfaceLight,
+    padding: 12,
+    borderRadius: 20,
+    gap: 8,
+  },
+  hintText: {
+    flex: 1,
     fontSize: 12,
     color: colors.textSecondary,
     lineHeight: 16,
+  },
+  section: {
+    marginTop: 16,
+  },
+  sectionTitle: {
+    fontSize: 11,
+    fontFamily: typography.semiBold,
+    color: colors.textSecondary,
+    paddingHorizontal: 16,
+    marginBottom: 8,
+    letterSpacing: 0.5,
+  },
+  categoriesSection: {
+    marginTop: 16,
+    marginBottom: 12,
+  },
+  categoriesScroll: {
+    paddingHorizontal: 16,
+    gap: 8,
+  },
+  categoryChip: {
+    paddingHorizontal: 18,
+    paddingVertical: 9,
+    borderRadius: 30,
+    backgroundColor: colors.surface,
+    marginRight: 8,
+  },
+  categoryChipActive: {
+    backgroundColor: colors.primary,
+  },
+  categoryText: {
+    fontSize: 14,
+    fontFamily: typography.medium,
+    color: colors.text,
+  },
+  categoryTextActive: {
+    color: '#ffffff',
+    fontFamily: typography.semiBold,
+  },
+  colorsSection: {
+    marginHorizontal: 16,
   },
   colorsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
-    marginTop: 16,
-    marginBottom: 16,
+    gap: 12,
   },
   colorItem: {
-    width: (width - 92) / 7,
     alignItems: 'center',
+    marginBottom: 8,
   },
   colorCircle: {
-    width: (width - 92) / 7,
-    height: (width - 92) / 7,
-    borderRadius: (width - 92) / 14,
+    width: 56,
+    height: 56,
+    borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   colorCircleSelected: {
-    borderWidth: 2,
+    borderWidth: 3,
     borderColor: colors.text,
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 5,
   },
-  checkmarkRing: {
+  checkmarkContainer: {
     width: '100%',
     height: '100%',
-    borderRadius: (width - 92) / 14,
+    borderRadius: 30,
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  addIconsButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    borderTopWidth: 0.5,
-    borderTopColor: colors.separator,
-    marginTop: 6,
-  },
-  addIconsText: {
-    fontSize: 15,
-    color: colors.text,
-    fontFamily: typography.medium,
-  },
-  footerText: {
-    fontSize: 12,
+  colorName: {
+    fontSize: 11,
     color: colors.textSecondary,
-    lineHeight: 16,
-    marginTop: 10,
+    textAlign: 'center',
   },
-  applyButton: {
-    marginHorizontal: 12,
-    marginTop: 16,
-    backgroundColor: '#007AFF',
-    paddingVertical: 14,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  applyButtonText: {
-    fontSize: 16,
+  colorNameSelected: {
+    fontSize: 11,
+    color: colors.text,
     fontFamily: typography.semiBold,
-    color: '#FFFFFF',
+    textAlign: 'center',
   },
 });
