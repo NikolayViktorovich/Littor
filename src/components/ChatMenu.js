@@ -37,15 +37,15 @@ export const ChatMenu = ({ visible, onClose, onSelectOption, isBlocked, chatId, 
     }
   }, [visible]);
   const menuItems = [
-    { id: 'wallpaper', icon: 'brush-outline', title: 'Change Wallpaper', color: colors.text },
-    { id: 'secret', icon: 'lock-closed-outline', title: 'Start Secret Chat', color: colors.text },
-    { id: 'share', icon: 'share-outline', title: 'Share Contact', color: colors.text },
+    { id: 'wallpaper', icon: 'brush', title: 'Изменить фон', color: colors.text },
+    { id: 'secret', icon: 'lock-closed', title: 'Начать секретный чат', color: colors.text },
+    { id: 'share', icon: 'share', title: 'Поделиться контактом', color: colors.text },
     { id: 'divider' },
-    { id: 'clear', icon: 'trash-outline', title: 'Clear Messages', color: colors.text },
+    { id: 'clear', icon: 'trash', title: 'Очистить сообщения', color: colors.text },
     { 
       id: 'block', 
-      icon: isBlocked ? 'checkmark-circle-outline' : 'hand-left-outline', 
-      title: isBlocked ? 'Unblock User' : 'Block User', 
+      icon: isBlocked ? 'checkmark-circle' : 'hand-left', 
+      title: isBlocked ? 'Разблокировать' : 'Заблокировать', 
       color: colors.error 
     },
   ];
