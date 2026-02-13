@@ -10,7 +10,7 @@ export default function ProfilePhotoScreen({ navigation }) {
   const requestGalleryPermission = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      Alert.alert('Permission Required', 'Gallery permission is required to choose photos.');
+      Alert.alert('Требуется разрешение', 'Для выбора фото нужен доступ к галерее.');
       return false;
     }
     return true;
@@ -32,7 +32,7 @@ export default function ProfilePhotoScreen({ navigation }) {
         updateProfile({ photoUri: result.assets[0].uri });
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to choose photo. Please try again.');
+      Alert.alert('Ошибка', 'Не удалось выбрать фото. Попробуйте снова.');
     } finally {
       navigation.goBack();
     }
