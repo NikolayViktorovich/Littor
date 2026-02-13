@@ -12,10 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
-const FILTERS = [
-  { id: 'all', label: 'All' },
-  { id: 'missed', label: 'Missed' },
-];
+import { LiquidGlassButton } from '../components/LiquidGlassButton';
 export default function CallsScreen({ navigation }) {
   const { calls, contacts, addCall } = useApp();
   const [selectedFilter, setSelectedFilter] = useState('all');
@@ -25,12 +22,12 @@ export default function CallsScreen({ navigation }) {
   }, [calls, selectedFilter]);
   const handleStartCall = () => {
     if (contacts.length === 0) {
-      Alert.alert('No Contacts', 'Add contacts first to make a call');
+      Alert.alert('Нет контактов', 'Сначала добавьте контакты для звонка');
       return;
     }
     Alert.alert(
-      'Start Call',
-      'Select a contact',
+      'Начать звонок',
+      'Выберите контакт',
       contacts.slice(0, 5).map(contact => ({
         text: contact.name,
         onPress: () => {
@@ -61,14 +58,14 @@ export default function CallsScreen({ navigation }) {
         </Text>
         <View style={styles.callInfo}>
           <Text style={styles.callType}>
-            {item.type === 'outgoing' ? 'Outgoing' : item.type === 'incoming' ? `Incoming (${item.duration})` : 'Missed'}
+            {item.type === 'outgoing' ? 'Исходящий' : item.type === 'incoming' ? `Входящий (${item.duration})` : 'Пропущенный'}
           </Text>
         </View>
       </View>
       <View style={styles.callRight}>
         <Text style={styles.callDate}>{item.date}</Text>
         <TouchableOpacity style={styles.infoButton}>
-          <Ionicons name="information-circle-outline" size={22} color="#ffffff" />
+          <Ionicons name="information-circle" size={22} color="#ffffff" />
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -78,34 +75,52 @@ export default function CallsScreen({ navigation }) {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
       <View style={styles.header}>
-        <TouchableOpacity style={styles.editButton}>
-          <Text style={styles.editButtonText}>Edit</Text>
-        </TouchableOpacity>
-        <View style={styles.filterContainer}>
-          {FILTERS.map(filter => (
-            <TouchableOpacity
-              key={filter.id}
-              style={[
-                styles.filterButton,
-                selectedFilter === filter.id && styles.filterButtonActive
-              ]}
-              onPress={() => setSelectedFilter(filter.id)}
-            >
-              <Text style={[
-                styles.filterText,
-                selectedFilter === filter.id && styles.filterTextActive
-              ]}>
-                {filter.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
+        <LiquidGlassButton 
+          style={styles.editButton}
+          showBlob={true}
+        >
+          <View style={styles.editButtonContent}>
+            <Text style={styles.editButtonText}>Изм.</Text>
+          </View>
+        </LiquidGlassButton>
+        <View style={styles.filterTabContainer}>
+          <TouchableOpacity
+            style={styles.filterTab}
+            onPress={() => setSelectedFilter('all')}
+            activeOpacity={0.7}
+          >
+            {selectedFilter === 'all' && <View style={styles.filterBlob} />}
+            <Text style={[
+              styles.filterText,
+              selectedFilter === 'all' && styles.filterTextActive
+            ]}>
+              Все
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.filterTab}
+            onPress={() => setSelectedFilter('missed')}
+            activeOpacity={0.7}
+          >
+            {selectedFilter === 'missed' && <View style={styles.filterBlob} />}
+            <Text style={[
+              styles.filterText,
+              selectedFilter === 'missed' && styles.filterTextActive
+            ]}>
+              Пропущ.
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity style={styles.newCallButton} onPress={handleStartCall}>
-        <Ionicons name="call-outline" size={22} color="#ffffff" />
-        <Text style={styles.newCallText}>Start New Call</Text>
+      <TouchableOpacity 
+        style={styles.newCallButton} 
+        onPress={handleStartCall}
+        activeOpacity={0.6}
+      >
+        <Ionicons name="call" size={20} color={colors.primary} />
+        <Text style={styles.newCallText}>Новый звонок</Text>
       </TouchableOpacity>
-      <Text style={styles.sectionTitle}>RECENT CALLS</Text>
+      <Text style={styles.sectionTitle}>НЕДАВНИЕ ЗВОНКИ</Text>
       <FlatList
         data={filteredCalls}
         renderItem={renderCall}
@@ -114,7 +129,7 @@ export default function CallsScreen({ navigation }) {
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No calls yet</Text>
+            <Text style={styles.emptyText}>Звонков пока нет</Text>
           </View>
         }
       />
@@ -135,10 +150,16 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   editButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    backgroundColor: 'rgba(28, 28, 30, 0.8)',
-    borderRadius: 20,
+    height: 36,
+    minWidth: 90,
+    paddingHorizontal: 16,
+    borderRadius: 18,
+    marginLeft: -12,
+  },
+  editButtonContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   editButtonText: {
     color: colors.text,
@@ -147,25 +168,56 @@ const styles = StyleSheet.create({
   },
   filterContainer: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(28, 28, 30, 0.8)',
-    borderRadius: 20,
-    padding: 2,
+    gap: 8,
+  },
+  filterTabContainer: {
+    height: 36,
+    borderRadius: 18,
+    paddingHorizontal: 4,
+    backgroundColor: 'rgba(18, 18, 20, 0.2)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    overflow: 'hidden',
+    flex: 0,
+  },
+  filterTab: {
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+    paddingHorizontal: 24,
+    minWidth: 80,
+  },
+  filterBlob: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(60, 60, 67, 0.6)',
+    borderRadius: 14,
+    margin: 2,
   },
   filterButton: {
+    height: 36,
+    minWidth: 100,
     paddingHorizontal: 20,
-    paddingVertical: 6,
     borderRadius: 18,
   },
+  filterButtonContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   filterButtonActive: {
-    backgroundColor: colors.textSecondary,
+    // Стиль для активной кнопки (блоб будет виден)
   },
   filterText: {
     color: colors.text,
     fontSize: 15,
     fontFamily: typography.medium,
+    letterSpacing: 0.3,
   },
   filterTextActive: {
-    color: colors.background,
+    color: colors.text,
+    fontFamily: typography.semiBold,
+    letterSpacing: 0.3,
   },
   newCallButton: {
     flexDirection: 'row',
@@ -176,7 +228,7 @@ const styles = StyleSheet.create({
   },
   newCallText: {
     fontSize: 16,
-    color: '#ffffff',
+    color: colors.primary,
     fontFamily: typography.medium,
   },
   sectionTitle: {
@@ -205,13 +257,13 @@ const styles = StyleSheet.create({
   callItem: {
     flexDirection: 'row',
     paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingVertical: 8,
     alignItems: 'center',
   },
   avatar: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -223,14 +275,14 @@ const styles = StyleSheet.create({
   },
   avatarText: {
     color: '#ffffff',
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: typography.medium,
   },
   callContent: {
     flex: 1,
   },
   callName: {
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: typography.medium,
     color: colors.text,
     marginBottom: 2,
@@ -243,7 +295,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   callType: {
-    fontSize: 14,
+    fontSize: 13,
     color: colors.textSecondary,
   },
   callRight: {
@@ -251,7 +303,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   callDate: {
-    fontSize: 14,
+    fontSize: 13,
     color: colors.textSecondary,
   },
   infoButton: {
