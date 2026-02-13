@@ -74,17 +74,23 @@ export default function CallScreen({ route, navigation }) {
         </Animated.View>
         <Text style={styles.name}>{contact.name}</Text>
         <Text style={styles.status}>
-          {callState === 'calling' && (callType === 'video' ? 'Video calling...' : 'Calling...')}
-          {callState === 'ringing' && (callType === 'video' ? 'Incoming video call...' : 'Incoming call...')}
+          {callState === 'calling' && (callType === 'video' ? 'Видеозвонок...' : 'Звоним...')}
+          {callState === 'ringing' && (callType === 'video' ? 'Входящий видеозвонок...' : 'Входящий звонок...')}
           {callState === 'active' && formatDuration(duration)}
         </Text>
       </View>
       {callState === 'ringing' && (
         <View style={styles.incomingActions}>
-          <TouchableOpacity style={styles.declineButton} onPress={handleDecline}>
+          <TouchableOpacity 
+            style={styles.declineButton} 
+            onPress={handleDecline}
+          >
             <Ionicons name="close" size={32} color="#ffffff" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.answerButton} onPress={handleAnswer}>
+          <TouchableOpacity 
+            style={styles.answerButton} 
+            onPress={handleAnswer}
+          >
             <Ionicons name="call" size={32} color="#ffffff" />
           </TouchableOpacity>
         </View>
@@ -96,26 +102,29 @@ export default function CallScreen({ route, navigation }) {
               style={[styles.controlButton, isMuted && styles.controlButtonActive]}
               onPress={() => setIsMuted(!isMuted)}
             >
-              <Ionicons name={isMuted ? 'mic-off' : 'mic'} size={28} color={colors.text} />
-              <Text style={styles.controlLabel}>Mute</Text>
+              <Ionicons name={isMuted ? 'mic-off' : 'mic'} size={24} color={colors.text} />
+              <Text style={styles.controlLabel}>Микрофон</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.controlButton, isSpeaker && styles.controlButtonActive]}
               onPress={() => setIsSpeaker(!isSpeaker)}
             >
-              <Ionicons name="volume-high" size={28} color={colors.text} />
-              <Text style={styles.controlLabel}>Speaker</Text>
+              <Ionicons name="volume-high" size={24} color={colors.text} />
+              <Text style={styles.controlLabel}>Динамик</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.controlButton, isVideoOn && styles.controlButtonActive]}
               onPress={() => setIsVideoOn(!isVideoOn)}
             >
-              <Ionicons name={isVideoOn ? 'videocam' : 'videocam-off'} size={28} color={colors.text} />
-              <Text style={styles.controlLabel}>Video</Text>
+              <Ionicons name={isVideoOn ? 'videocam' : 'videocam-off'} size={24} color={colors.text} />
+              <Text style={styles.controlLabel}>Видео</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.endCallButton} onPress={handleEndCall}>
-            <Ionicons name="call" size={32} color="#ffffff" />
+          <TouchableOpacity 
+            style={styles.endCallButton} 
+            onPress={handleEndCall}
+          >
+            <Ionicons name="call" size={28} color="#ffffff" />
           </TouchableOpacity>
         </View>
       )}
@@ -131,18 +140,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 100,
+    paddingTop: 80,
   },
   avatarContainer: {
-    marginBottom: 40,
+    marginBottom: 32,
   },
   avatar: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+    elevation: 12,
   },
   avatarImage: {
     width: '100%',
@@ -154,20 +168,24 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
   name: {
-    fontSize: 32,
-    fontFamily: typography.semiBold,
+    fontSize: 28,
+    fontFamily: typography.bold,
     color: colors.text,
-    marginBottom: 8,
+    marginBottom: 6,
+    letterSpacing: 0.5,
   },
   status: {
-    fontSize: 18,
+    fontSize: 16,
+    fontFamily: typography.medium,
     color: colors.textSecondary,
+    letterSpacing: 0.3,
   },
   incomingActions: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingHorizontal: 60,
-    paddingBottom: 60,
+    justifyContent: 'center',
+    gap: 40,
+    paddingHorizontal: 40,
+    paddingBottom: 80,
   },
   declineButton: {
     width: 70,
@@ -186,31 +204,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   controls: {
-    paddingBottom: 60,
-    paddingHorizontal: 20,
+    paddingBottom: 80,
+    paddingHorizontal: 24,
   },
   controlsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
+    gap: 16,
     marginBottom: 40,
   },
   controlButton: {
-    alignItems: 'center',
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 70,
+    height: 70,
+    borderRadius: 35,
     backgroundColor: colors.surface,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   controlButtonActive: {
     backgroundColor: colors.surfaceLight,
   },
   controlLabel: {
-    fontSize: 12,
+    fontSize: 11,
     color: colors.textSecondary,
-    marginTop: 8,
+    marginTop: 6,
+    fontFamily: typography.medium,
+    letterSpacing: 0.3,
     position: 'absolute',
-    bottom: -20,
+    bottom: -22,
   },
   endCallButton: {
     width: 70,
