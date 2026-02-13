@@ -166,13 +166,13 @@ export default function ChatScreen({ route, navigation }) {
   };
   const emojiCategories = {
     recent: {
-      name: 'Recent',
-      icon: 'time-outline',
+      name: 'Недавние',
+      icon: 'time',
       emojis: recentEmojis,
     },
     smileys: {
-      name: 'Smileys',
-      icon: 'happy-outline',
+      name: 'Смайлы',
+      icon: 'happy',
       emojis: [
         '😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂',
         '🙂', '🙃', '😉', '😊', '😇', '🥰', '😍', '🤩',
@@ -185,8 +185,8 @@ export default function ChatScreen({ route, navigation }) {
       ],
     },
     gestures: {
-      name: 'Gestures',
-      icon: 'hand-left-outline',
+      name: 'Жесты',
+      icon: 'hand-left',
       emojis: [
         '👍', '👎', '👊', '✊', '🤛', '🤜', '🤞', '✌️',
         '🤟', '🤘', '👌', '🤌', '🤏', '👈', '👉', '👆',
@@ -196,8 +196,8 @@ export default function ChatScreen({ route, navigation }) {
       ],
     },
     hearts: {
-      name: 'Hearts',
-      icon: 'heart-outline',
+      name: 'Сердца',
+      icon: 'heart',
       emojis: [
         '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍',
         '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖',
@@ -205,8 +205,8 @@ export default function ChatScreen({ route, navigation }) {
       ],
     },
     animals: {
-      name: 'Animals',
-      icon: 'paw-outline',
+      name: 'Животные',
+      icon: 'paw',
       emojis: [
         '🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼',
         '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐔',
@@ -215,8 +215,8 @@ export default function ChatScreen({ route, navigation }) {
       ],
     },
     food: {
-      name: 'Food',
-      icon: 'fast-food-outline',
+      name: 'Еда',
+      icon: 'fast-food',
       emojis: [
         '🍎', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍈',
         '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍅', '🍆',
@@ -225,8 +225,8 @@ export default function ChatScreen({ route, navigation }) {
       ],
     },
     activities: {
-      name: 'Activities',
-      icon: 'football-outline',
+      name: 'Активности',
+      icon: 'football',
       emojis: [
         '⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉',
         '🥏', '🎱', '🪀', '🏓', '🏸', '🏒', '🏑', '🥍',
@@ -235,8 +235,8 @@ export default function ChatScreen({ route, navigation }) {
       ],
     },
     objects: {
-      name: 'Objects',
-      icon: 'bulb-outline',
+      name: 'Объекты',
+      icon: 'bulb',
       emojis: [
         '⌚', '📱', '💻', '⌨️', '🖥️', '🖨️', '🖱️', '🖲️',
         '🕹️', '🗜️', '💾', '💿', '📀', '📼', '📷', '📸',
@@ -295,25 +295,25 @@ export default function ChatScreen({ route, navigation }) {
     setTimeout(() => {
       switch (action) {
         case 'reply':
-          Alert.alert('Reply', `Reply to: ${selectedMessage?.text}`);
+          Alert.alert('Ответить', `Ответ на: ${selectedMessage?.text}`);
           break;
         case 'copy':
-          Alert.alert('Copied', 'Message copied to clipboard');
+          Alert.alert('Скопировано', 'Сообщение скопировано в буфер');
           break;
         case 'edit':
-          Alert.alert('Edit', 'Edit message');
+          Alert.alert('Редактирование', 'Редактирование сообщения');
           break;
         case 'pin':
-          Alert.alert('Pin', 'Message pinned');
+          Alert.alert('Закреплено', 'Сообщение закреплено');
           break;
         case 'forward':
-          Alert.alert('Forward', 'Forward message');
+          Alert.alert('Переслать', 'Пересылка сообщения');
           break;
         case 'delete':
-          Alert.alert('Delete', 'Message deleted');
+          Alert.alert('Удалено', 'Сообщение удалено');
           break;
         case 'select':
-          Alert.alert('Select', 'Select mode activated');
+          Alert.alert('Выбор', 'Режим выбора сообщений включён');
           break;
       }
     }, 300);
@@ -321,7 +321,7 @@ export default function ChatScreen({ route, navigation }) {
   const handleReaction = (emoji) => {
     closeMessageMenu();
     setTimeout(() => {
-      Alert.alert('Reaction', `Added ${emoji} reaction`);
+      Alert.alert('Реакция', `Добавлена реакция ${emoji}`);
     }, 300);
   };
   useEffect(() => {
@@ -341,7 +341,7 @@ export default function ChatScreen({ route, navigation }) {
   const handleSendMessage = () => {
     if (message.trim()) {
       if (isBlocked) {
-        Alert.alert('User Blocked', 'Unblock this user to send messages');
+        Alert.alert('Пользователь заблокирован', 'Разблокируйте пользователя, чтобы отправлять сообщения');
         return;
       }
       addMessage(chat.id, message.trim());
@@ -388,22 +388,22 @@ export default function ChatScreen({ route, navigation }) {
         break;
       case 'share':
         Share.share({
-          message: `Contact: ${chat.name}`,
-          title: 'Share Contact',
+          message: `Контакт: ${chat.name}`,
+          title: 'Поделиться контактом',
         }).catch(err => console.log(err));
         break;
       case 'clear':
         Alert.alert(
-          'Clear Messages',
-          'Are you sure you want to delete all messages in this chat?',
+          'Очистить чат',
+          'Удалить все сообщения в этом чате?',
           [
-            { text: 'Cancel', style: 'cancel' },
+            { text: 'Отмена', style: 'cancel' },
             { 
-              text: 'Clear', 
+              text: 'Очистить', 
               style: 'destructive',
               onPress: () => {
                 clearMessages(chat.id);
-                Alert.alert('Success', 'All messages have been cleared');
+                Alert.alert('Готово', 'Все сообщения удалены');
               }
             },
           ]
@@ -412,31 +412,31 @@ export default function ChatScreen({ route, navigation }) {
       case 'block':
         if (isBlocked) {
           Alert.alert(
-            'Unblock User',
-            `Unblock ${chat.name}?`,
+            'Разблокировать пользователя',
+            `Разблокировать ${chat.name}?`,
             [
-              { text: 'Cancel', style: 'cancel' },
+              { text: 'Отмена', style: 'cancel' },
               { 
-                text: 'Unblock', 
+                text: 'Разблокировать', 
                 onPress: () => {
                   unblockUser(chat.id);
-                  Alert.alert('Success', `${chat.name} has been unblocked`);
+                  Alert.alert('Готово', `${chat.name} разблокирован`);
                 }
               },
             ]
           );
         } else {
           Alert.alert(
-            'Block User',
-            `Block ${chat.name}? You won't receive messages from this user.`,
+            'Заблокировать пользователя',
+            `Заблокировать ${chat.name}? Вы перестанете получать от него сообщения.`,
             [
-              { text: 'Cancel', style: 'cancel' },
+              { text: 'Отмена', style: 'cancel' },
               { 
-                text: 'Block', 
+                text: 'Заблокировать', 
                 style: 'destructive',
                 onPress: () => {
                   blockUser(chat.id);
-                  Alert.alert('Success', `${chat.name} has been blocked`);
+                  Alert.alert('Готово', `${chat.name} заблокирован`);
                 }
               },
             ]
@@ -557,7 +557,7 @@ export default function ChatScreen({ route, navigation }) {
               <View style={styles.channelHeader}>
                 <Text style={styles.channelName}>{item.channelName}</Text>
                 <View style={styles.channelInfo}>
-                  <Ionicons name="eye-outline" size={14} color={colors.textSecondary} />
+                  <Ionicons name="eye" size={14} color={colors.textSecondary} />
                   <Text style={styles.channelViews}>{item.views}</Text>
                   <Text style={styles.channelDate}>{item.date}</Text>
                 </View>
@@ -683,7 +683,7 @@ export default function ChatScreen({ route, navigation }) {
               <View style={styles.headerCenter}>
                 <Text style={styles.headerTitle} numberOfLines={1}>{chat.name}</Text>
                 <Text style={styles.headerSubtitle}>
-                  {chat.online ? 'online' : chat.status || 'last seen recently'}
+                  {chat.online ? 'в сети' : chat.status || 'был(а) в сети недавно'}
                 </Text>
               </View>
             </BlurView>
@@ -722,7 +722,7 @@ export default function ChatScreen({ route, navigation }) {
             <SearchBar
               value={searchQuery}
               onChangeText={setSearchQuery}
-              placeholder="Search messages..."
+              placeholder="Поиск по сообщениям..."
               autoFocus
               onClose={closeSearch}
             />
@@ -802,10 +802,10 @@ export default function ChatScreen({ route, navigation }) {
               <View style={styles.emptyContainer}>
                 <View style={styles.emptyCard}>
                   <View style={styles.emptyIconContainer}>
-                    <Ionicons name="chatbubble-ellipses-outline" size={40} color={colors.textTertiary} />
+                    <Ionicons name="chatbubble-ellipses" size={40} color={colors.textTertiary} />
                   </View>
-                  <Text style={styles.emptyText}>No messages yet</Text>
-                  <Text style={styles.emptySubtext}>Start a conversation</Text>
+                  <Text style={styles.emptyText}>Здесь пока нет сообщений</Text>
+                  <Text style={styles.emptySubtext}>Напишите первое сообщение</Text>
                 </View>
               </View>
             }
@@ -830,13 +830,13 @@ export default function ChatScreen({ route, navigation }) {
             <BlurView intensity={120} tint="dark" style={styles.blockedBlur}>
               <View style={styles.blockedOverlay} />
               <View style={styles.blockedContainer}>
-                <Ionicons name="hand-left-outline" size={20} color={colors.error} />
-                <Text style={styles.blockedText}>User is blocked</Text>
+                <Ionicons name="hand-left" size={20} color={colors.error} />
+                <Text style={styles.blockedText}>Пользователь заблокирован</Text>
                 <TouchableOpacity 
                   style={styles.unblockButton}
                   onPress={() => handleMenuOption('block')}
                 >
-                  <Text style={styles.unblockButtonText}>Unblock</Text>
+                  <Text style={styles.unblockButtonText}>Разблокировать</Text>
                 </TouchableOpacity>
               </View>
             </BlurView>
@@ -853,7 +853,7 @@ export default function ChatScreen({ route, navigation }) {
                 <View style={styles.inputWrapper}>
                   <TextInput
                     style={styles.input}
-                    placeholder="Message"
+                    placeholder="Сообщение"
                     placeholderTextColor={colors.textTertiary}
                     value={message}
                     onChangeText={setMessage}
@@ -867,7 +867,7 @@ export default function ChatScreen({ route, navigation }) {
                       openEmojiPicker();
                     }
                   }}>
-                    <Ionicons name="happy-outline" size={22} color={colors.textSecondary} />
+                    <Ionicons name="happy" size={22} color={colors.textSecondary} />
                   </TouchableOpacity>
                 </View>
               </BlurView>
@@ -984,7 +984,7 @@ export default function ChatScreen({ route, navigation }) {
                 {selectedEmojiCategory === 'recent' && recentEmojis.length > 0 && (
                   <View style={styles.emojiSection}>
                     <View style={styles.emojiSectionHeader}>
-                      <Text style={styles.emojiSectionTitle}>RECENTLY USED</Text>
+                      <Text style={styles.emojiSectionTitle}>НЕДАВНО ИСПОЛЬЗОВАННЫЕ</Text>
                       <TouchableOpacity onPress={() => setRecentEmojis([])}>
                         <Ionicons name="close" size={18} color={colors.textSecondary} />
                       </TouchableOpacity>
@@ -1115,33 +1115,33 @@ export default function ChatScreen({ route, navigation }) {
             <BlurView intensity={80} tint="dark" style={styles.actionMenu}>
               <TouchableOpacity style={styles.actionItem} onPress={() => handleMessageAction('reply')}>
                 <Ionicons name="arrow-undo" size={18} color={colors.text} />
-                <Text style={styles.actionText}>Reply</Text>
+                <Text style={styles.actionText}>Ответить</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.actionItem} onPress={() => handleMessageAction('copy')}>
-                <Ionicons name="copy-outline" size={18} color={colors.text} />
-                <Text style={styles.actionText}>Copy</Text>
+                <Ionicons name="copy" size={18} color={colors.text} />
+                <Text style={styles.actionText}>Копировать</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.actionItem} onPress={() => handleMessageAction('edit')}>
-                <Ionicons name="create-outline" size={18} color={colors.text} />
-                <Text style={styles.actionText}>Edit</Text>
+                <Ionicons name="create" size={18} color={colors.text} />
+                <Text style={styles.actionText}>Редактировать</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.actionItem} onPress={() => handleMessageAction('pin')}>
-                <Ionicons name="pin-outline" size={18} color={colors.text} />
-                <Text style={styles.actionText}>Pin</Text>
+                <Ionicons name="pin" size={18} color={colors.text} />
+                <Text style={styles.actionText}>Закрепить</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.actionItem} onPress={() => handleMessageAction('forward')}>
                 <Ionicons name="arrow-redo" size={18} color={colors.text} />
-                <Text style={styles.actionText}>Forward</Text>
+                <Text style={styles.actionText}>Переслать</Text>
               </TouchableOpacity>
               <View style={styles.actionDivider} />
               <TouchableOpacity style={styles.actionItem} onPress={() => handleMessageAction('delete')}>
-                <Ionicons name="trash-outline" size={18} color={colors.error} />
-                <Text style={[styles.actionText, styles.actionTextDanger]}>Delete</Text>
+                <Ionicons name="trash" size={18} color={colors.error} />
+                <Text style={[styles.actionText, styles.actionTextDanger]}>Удалить</Text>
               </TouchableOpacity>
               <View style={styles.actionDivider} />
               <TouchableOpacity style={styles.actionItem} onPress={() => handleMessageAction('select')}>
-                <Ionicons name="checkmark-circle-outline" size={18} color={colors.text} />
-                <Text style={styles.actionText}>Select</Text>
+                <Ionicons name="checkmark-circle" size={18} color={colors.text} />
+                <Text style={styles.actionText}>Выбрать</Text>
               </TouchableOpacity>
             </BlurView>
           </Animated.View>
@@ -1186,7 +1186,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   headerButtonBlur: {
-    borderRadius: 20,
+    borderRadius: 30,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -1203,7 +1203,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(18, 18, 20, 0.05)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 20,
+    borderRadius: 30,
   },
   backButton: {
     width: 40,
@@ -1219,7 +1219,7 @@ const styles = StyleSheet.create({
   },
   backBadge: {
     backgroundColor: colors.primary,
-    borderRadius: 9,
+    borderRadius: 20,
     minWidth: 18,
     height: 18,
     justifyContent: 'center',
@@ -1267,7 +1267,7 @@ const styles = StyleSheet.create({
   },
   headerCenterWrapper: {
     flex: 1,
-    borderRadius: 20,
+    borderRadius: 30,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -1276,7 +1276,7 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   headerCenterBlur: {
-    borderRadius: 20,
+    borderRadius: 30,
     overflow: 'hidden',
   },
   headerCenterOverlay: {
@@ -1288,7 +1288,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(18, 18, 20, 0.05)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 20,
+    borderRadius: 30,
   },
   headerCenter: {
     paddingVertical: 8,
@@ -1326,7 +1326,7 @@ const styles = StyleSheet.create({
   },
   searchCounterBlur: {
     marginTop: 8,
-    borderRadius: 20,
+    borderRadius: 30,
     overflow: 'hidden',
     alignSelf: 'flex-end',
     shadowColor: '#000',
@@ -1344,7 +1344,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(18, 18, 20, 0.05)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 20,
+    borderRadius: 30,
   },
   searchCounter: {
     flexDirection: 'row',
@@ -1436,7 +1436,7 @@ const styles = StyleSheet.create({
   },
   emptyCard: {
     backgroundColor: 'rgba(28, 28, 30, 0.6)',
-    borderRadius: 24,
+    borderRadius: 27,
     paddingVertical: 40,
     paddingHorizontal: 32,
     alignItems: 'center',
@@ -1480,7 +1480,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(44, 44, 46, 0.6)',
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 12,
+    borderRadius: 20,
     overflow: 'hidden',
   },
   channelMessage: {
@@ -1557,7 +1557,7 @@ const styles = StyleSheet.create({
   },
   incomingBubble: {
     backgroundColor: 'rgba(44, 44, 46, 0.8)',
-    borderRadius: 16,
+    borderRadius: 25,
     borderTopLeftRadius: 4,
     padding: 12,
     maxWidth: '70%',
@@ -1586,7 +1586,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   myMessageBubble: {
-    borderRadius: 16,
+    borderRadius: 25,
     borderTopRightRadius: 4,
     padding: 12,
     maxWidth: '70%',
@@ -1615,7 +1615,7 @@ const styles = StyleSheet.create({
   imageMessage: {
     width: 280,
     height: 400,
-    borderRadius: 16,
+    borderRadius: 25,
     backgroundColor: 'rgba(44, 44, 46, 0.8)',
     overflow: 'hidden',
     position: 'relative',
@@ -1631,7 +1631,7 @@ const styles = StyleSheet.create({
     right: 12,
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 30,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'center',
     alignItems: 'center',
@@ -1660,7 +1660,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   attachButtonBlur: {
-    borderRadius: 20,
+    borderRadius: 30,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -1677,7 +1677,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(18, 18, 20, 0.05)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 20,
+    borderRadius: 30,
   },
   attachButton: {
     width: 40,
@@ -1687,7 +1687,7 @@ const styles = StyleSheet.create({
   },
   inputWrapperBlur: {
     flex: 1,
-    borderRadius: 20,
+    borderRadius: 30,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -1704,7 +1704,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(18, 18, 20, 0.05)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 20,
+    borderRadius: 30,
   },
   inputWrapper: {
     flexDirection: 'row',
@@ -1739,7 +1739,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   iconButtonBlur: {
-    borderRadius: 20,
+    borderRadius: 30,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -1754,7 +1754,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   micButtonWrapper: {
-    borderRadius: 20,
+    borderRadius: 30,
     overflow: 'hidden',
   },
   micButton: {
@@ -1764,7 +1764,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sendButtonBlur: {
-    borderRadius: 20,
+    borderRadius: 30,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -1781,7 +1781,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(18, 18, 20, 0.05)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 20,
+    borderRadius: 30,
   },
   sendButton: {
     width: 40,
@@ -1791,7 +1791,7 @@ const styles = StyleSheet.create({
   },
   blockedBlur: {
     flex: 1,
-    borderRadius: 25,
+    borderRadius: 27,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -1808,7 +1808,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(18, 18, 20, 0.05)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 25,
+    borderRadius: 27,
   },
   blockedContainer: {
     flexDirection: 'row',
@@ -1827,7 +1827,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     backgroundColor: colors.error,
-    borderRadius: 16,
+    borderRadius: 25,
   },
   unblockButtonText: {
     fontSize: 14,
@@ -1847,7 +1847,7 @@ const styles = StyleSheet.create({
     maxWidth: 330,
   },
   selectedMessagePreview: {
-    borderRadius: 16,
+    borderRadius: 25,
     padding: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -1881,7 +1881,7 @@ const styles = StyleSheet.create({
   reactionsBar: {
     flexDirection: 'row',
     overflow: 'hidden',
-    borderRadius: 26,
+    borderRadius: 29,
     paddingHorizontal: 3,
     paddingVertical: 3,
     alignItems: 'center',
@@ -1895,7 +1895,7 @@ const styles = StyleSheet.create({
   reactionButton: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -1905,7 +1905,7 @@ const styles = StyleSheet.create({
   reactionMoreButton: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 30,
     backgroundColor: 'rgba(60, 60, 67, 0.7)',
     justifyContent: 'center',
     alignItems: 'center',
@@ -1918,7 +1918,7 @@ const styles = StyleSheet.create({
     maxWidth: 270,
   },
   actionMenu: {
-    borderRadius: 16,
+    borderRadius: 25,
     overflow: 'hidden',
     paddingVertical: 2,
     shadowColor: '#000',
@@ -2015,7 +2015,7 @@ const styles = StyleSheet.create({
     height: 36,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 18,
+    borderRadius: 27,
     marginHorizontal: 2,
   },
   emojiCategoryButtonActive: {
@@ -2035,7 +2035,7 @@ const styles = StyleSheet.create({
     height: 32,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: 25,
   },
   skinToneButtonActive: {
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
