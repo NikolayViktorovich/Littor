@@ -8,16 +8,16 @@ export const INITIAL_CHATS = [
   { id: '7', name: 'Клиент всегда прав', lastMessage: 'Дизайнер интерьера поделилась базовой кухней россиян в 2026 году. Го...', time: '01:53', unread: 0, online: false, muted: true },
 ];
 export const INITIAL_CONTACTS = [
-  { id: '1', name: 'Маргарита Токарева', status: 'online', online: true },
-  { id: '2', name: 'xenofluxide†', status: 'online', online: true },
-  { id: '3', name: 'Вика Мау Обои', status: 'online', online: true },
-  { id: '4', name: 'Ярик Скоробогатов', status: 'last seen just now', online: false },
-  { id: '5', name: 'Лера', status: 'last seen just now', online: false },
-  { id: '6', name: 'Серёга', status: 'last seen 1 minute ago', online: false },
-  { id: '7', name: 'Димас', status: 'last seen 2 minutes ago', online: false },
-  { id: '8', name: 'Степан', status: 'last seen 15 minutes ago', online: false },
-  { id: '9', name: 'Arina', status: 'last seen 21 minutes ago', online: false },
-  { id: '10', name: 'Сабирка', status: 'last seen 25 minutes ago', online: false },
+  { id: '1', name: 'Маргарита Токарева', status: 'в сети', online: true },
+  { id: '2', name: 'xenofluxide†', status: 'в сети', online: true },
+  { id: '3', name: 'Вика Мау Обои', status: 'в сети', online: true },
+  { id: '4', name: 'Ярик Скоробогатов', status: 'был(а) только что', online: false },
+  { id: '5', name: 'Лера', status: 'была только что', online: false },
+  { id: '6', name: 'Серёга', status: 'был 1 минуту назад', online: false },
+  { id: '7', name: 'Димас', status: 'был 2 минуты назад', online: false },
+  { id: '8', name: 'Степан', status: 'был 15 минут назад', online: false },
+  { id: '9', name: 'Arina', status: 'была 21 минуту назад', online: false },
+  { id: '10', name: 'Сабирка', status: 'была 25 минут назад', online: false },
 ];
 export const INITIAL_CALLS = [
   { id: '1', name: 'Вика Мау Обои', type: 'missed', date: '10.11.25', time: '14:32' },
