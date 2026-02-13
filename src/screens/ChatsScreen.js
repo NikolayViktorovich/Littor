@@ -17,6 +17,7 @@ import { useApp } from '../context/AppContext';
 import { useInitialData } from '../hooks/useInitialData';
 import CustomAlert from '../components/CustomAlert';
 import { SearchBar } from '../components/SearchBar';
+import { LiquidGlassButton } from '../components/LiquidGlassButton';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 export default function ChatsScreen({ navigation }) {
   useInitialData();
@@ -37,14 +38,14 @@ export default function ChatsScreen({ navigation }) {
   const handleDeleteChat = (chatId) => {
     setAlertConfig({
       visible: true,
-      title: 'Delete Chat',
-      message: 'Are you sure you want to delete this chat?',
+      title: 'Удалить чат',
+      message: 'Точно удалить этот чат?',
       icon: 'trash',
       iconColor: colors.error,
       buttons: [
-        { text: 'Cancel', style: 'cancel' },
+        { text: 'Отмена', style: 'cancel' },
         { 
-          text: 'Delete', 
+          text: 'Удалить', 
           style: 'destructive', 
           onPress: () => deleteChat(chatId) 
         },
@@ -159,13 +160,13 @@ export default function ChatsScreen({ navigation }) {
             style={styles.editActionButton}
             onPress={() => handleArchiveChat(item.id)}
           >
-            <Ionicons name="archive-outline" size={20} color={colors.text} />
+            <Ionicons name="archive" size={20} color={colors.text} />
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.editActionButton, styles.deleteButton]}
             onPress={() => handleDeleteChat(item.id)}
           >
-            <Ionicons name="trash-outline" size={20} color={colors.error} />
+            <Ionicons name="trash" size={20} color={colors.error} />
           </TouchableOpacity>
         </View>
       )}
@@ -177,25 +178,36 @@ export default function ChatsScreen({ navigation }) {
       <View style={styles.header}>
         <BlurView intensity={20} tint="dark" style={styles.headerBlur}>
           <View style={styles.headerContent}>
-            <TouchableOpacity
+            <LiquidGlassButton
               style={styles.editButton}
               onPress={() => setIsEditMode(!isEditMode)}
+              showBlob={true}
             >
-              <Text style={styles.editButtonText}>{isEditMode ? 'Done' : 'Edit'}</Text>
-            </TouchableOpacity>
+              <View style={styles.editButtonContent}>
+                <Text style={styles.editButtonText}>{isEditMode ? 'Готово' : 'Изм.'}</Text>
+              </View>
+            </LiquidGlassButton>
             <View style={styles.headerCenter}>
-              <Text style={styles.headerTitle}>Chats</Text>
+              <Text style={styles.headerTitle}>Чаты</Text>
             </View>
             <View style={styles.headerRight}>
-              <TouchableOpacity
+              <LiquidGlassButton
                 style={styles.iconButton}
                 onPress={() => navigation.navigate('Contacts')}
+                showBlob={true}
               >
-                <Ionicons name="add" size={24} color={colors.text} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.iconButton}>
-                <Ionicons name="create-outline" size={20} color={colors.text} />
-              </TouchableOpacity>
+                <View style={styles.iconButtonContent}>
+                  <Ionicons name="add-circle" size={24} color={colors.text} />
+                </View>
+              </LiquidGlassButton>
+              <LiquidGlassButton 
+                style={styles.iconButton}
+                showBlob={true}
+              >
+                <View style={styles.iconButtonContent}>
+                  <Ionicons name="create" size={20} color={colors.text} />
+                </View>
+              </LiquidGlassButton>
             </View>
           </View>
         </BlurView>
@@ -203,7 +215,7 @@ export default function ChatsScreen({ navigation }) {
       <SearchBar
         value={searchQuery}
         onChangeText={setSearchQuery}
-        placeholder="Search"
+        placeholder="Поиск"
         style={styles.searchBar}
       />
       {archivedChats.length > 0 && (
@@ -212,10 +224,10 @@ export default function ChatsScreen({ navigation }) {
           onPress={() => navigation.navigate('ArchivedChats')}
         >
           <View style={styles.archivedIcon}>
-            <Ionicons name="archive-outline" size={28} color="#000000" />
+            <Ionicons name="archive" size={28} color="#000000" />
           </View>
           <View style={styles.archivedContent}>
-            <Text style={styles.archivedTitle}>Archived Chats</Text>
+            <Text style={styles.archivedTitle}>Архив чатов</Text>
             <Text style={styles.archivedSubtitle} numberOfLines={1}>
               {archivedChats.map(c => c.name).join(', ')}
             </Text>
@@ -236,7 +248,7 @@ export default function ChatsScreen({ navigation }) {
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No chats found</Text>
+            <Text style={styles.emptyText}>Чаты не найдены</Text>
           </View>
         }
       />
@@ -274,7 +286,7 @@ export default function ChatsScreen({ navigation }) {
                 <View style={styles.previewHeaderCenter}>
                   <Text style={styles.previewName}>{previewChat.name}</Text>
                   <Text style={styles.previewStatus}>
-                    {previewChat.online ? 'online' : 'last seen 1 hour ago'}
+                    {previewChat.online ? 'в сети' : 'был(а) в сети час назад'}
                   </Text>
                 </View>
                 <View style={styles.previewAvatar}>
@@ -287,10 +299,10 @@ export default function ChatsScreen({ navigation }) {
                 <View style={styles.previewDateSeparator}>
                   <Text style={styles.previewDateText}>26.06.2026</Text>
                   <View style={styles.previewMessageInfo}>
-                    <Ionicons name="eye-outline" size={14} color={colors.textSecondary} />
+                    <Ionicons name="eye" size={14} color={colors.textSecondary} />
                     <Text style={styles.previewMessageInfoText}>45</Text>
                     <Text style={styles.previewMessageInfoText}>17:48</Text>
-                    <Ionicons name="share-outline" size={14} color={colors.textSecondary} />
+                    <Ionicons name="share" size={14} color={colors.textSecondary} />
                   </View>
                 </View>
                 {messages[previewChat.id]?.slice(-3).map((msg, index) => (
@@ -311,7 +323,7 @@ export default function ChatsScreen({ navigation }) {
                       <Text style={styles.previewMessageText}>{msg.text}</Text>
                       <View style={styles.previewMessageFooter}>
                         {msg.edited && (
-                          <Text style={styles.previewMessageEdited}>edited</Text>
+                          <Text style={styles.previewMessageEdited}>изменено</Text>
                         )}
                         <Text style={styles.previewMessageTime}>{msg.time}</Text>
                         {msg.isMine && msg.hasCheck && (
@@ -340,48 +352,48 @@ export default function ChatsScreen({ navigation }) {
                 style={styles.previewMenuItem}
                 onPress={() => handlePreviewAction('addContact')}
               >
-                <Ionicons name="person-add-outline" size={20} color={colors.text} />
-                <Text style={styles.previewMenuText}>Add to Contacts</Text>
+                <Ionicons name="person-add" size={20} color={colors.text} />
+                <Text style={styles.previewMenuText}>Добавить в контакты</Text>
               </TouchableOpacity>
               <View style={styles.previewMenuDivider} />
               <TouchableOpacity 
                 style={styles.previewMenuItem}
                 onPress={() => handlePreviewAction('addFolder')}
               >
-                <Ionicons name="folder-outline" size={20} color={colors.text} />
-                <Text style={styles.previewMenuText}>Add to Folder</Text>
+                <Ionicons name="folder" size={20} color={colors.text} />
+                <Text style={styles.previewMenuText}>Добавить в папку</Text>
               </TouchableOpacity>
               <View style={styles.previewMenuDivider} />
               <TouchableOpacity 
                 style={styles.previewMenuItem}
                 onPress={() => handlePreviewAction('markUnread')}
               >
-                <Ionicons name="mail-unread-outline" size={20} color={colors.text} />
-                <Text style={styles.previewMenuText}>Mark as Unread</Text>
+                <Ionicons name="mail-unread" size={20} color={colors.text} />
+                <Text style={styles.previewMenuText}>Отметить непрочитанным</Text>
               </TouchableOpacity>
               <View style={styles.previewMenuDivider} />
               <TouchableOpacity 
                 style={styles.previewMenuItem}
                 onPress={() => handlePreviewAction('pin')}
               >
-                <Ionicons name="pin-outline" size={20} color={colors.text} />
-                <Text style={styles.previewMenuText}>Pin</Text>
+                <Ionicons name="pin" size={20} color={colors.text} />
+                <Text style={styles.previewMenuText}>Закрепить</Text>
               </TouchableOpacity>
               <View style={styles.previewMenuDivider} />
               <TouchableOpacity 
                 style={styles.previewMenuItem}
                 onPress={() => handlePreviewAction('mute')}
               >
-                <Ionicons name="notifications-off-outline" size={20} color={colors.text} />
-                <Text style={styles.previewMenuText}>Mute</Text>
+                <Ionicons name="notifications-off" size={20} color={colors.text} />
+                <Text style={styles.previewMenuText}>Отключить звук</Text>
               </TouchableOpacity>
               <View style={styles.previewMenuDivider} />
               <TouchableOpacity 
                 style={styles.previewMenuItem}
                 onPress={() => handlePreviewAction('delete')}
               >
-                <Ionicons name="trash-outline" size={20} color={colors.error} />
-                <Text style={[styles.previewMenuText, styles.previewMenuTextDanger]}>Delete</Text>
+                <Ionicons name="trash" size={20} color={colors.error} />
+                <Text style={[styles.previewMenuText, styles.previewMenuTextDanger]}>Удалить</Text>
               </TouchableOpacity>
             </BlurView>
           )}
@@ -406,6 +418,7 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: colors.background,
+    position: 'relative',
   },
   headerBlur: {
     overflow: 'hidden',
@@ -419,11 +432,16 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   editButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    backgroundColor: 'rgba(28, 28, 30, 0.8)',
-    borderRadius: 20,
-    overflow: 'hidden',
+    height: 36,
+    minWidth: 90,
+    paddingHorizontal: 16,
+    borderRadius: 18,
+    marginLeft: -12,
+  },
+  editButtonContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   editButtonText: {
     color: colors.text,
@@ -431,8 +449,14 @@ const styles = StyleSheet.create({
     fontFamily: typography.medium,
   },
   headerCenter: {
-    flex: 1,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 60,
+    bottom: 12,
     alignItems: 'center',
+    justifyContent: 'center',
+    pointerEvents: 'none',
   },
   headerTitle: {
     fontSize: 17,
@@ -447,7 +471,9 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(28, 28, 30, 0.8)',
+  },
+  iconButtonContent: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -463,7 +489,7 @@ const styles = StyleSheet.create({
   archivedIcon: {
     width: 52,
     height: 52,
-    borderRadius: 26,
+    borderRadius: 29,
     backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center',
@@ -489,7 +515,7 @@ const styles = StyleSheet.create({
   },
   archivedBadge: {
     backgroundColor: colors.textSecondary,
-    borderRadius: 12,
+    borderRadius: 20,
     minWidth: 24,
     height: 24,
     justifyContent: 'center',
@@ -527,7 +553,7 @@ const styles = StyleSheet.create({
   editActionButton: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 30,
     backgroundColor: 'rgba(28, 28, 30, 0.9)',
     justifyContent: 'center',
     alignItems: 'center',
@@ -569,7 +595,7 @@ const styles = StyleSheet.create({
     right: 0,
     width: 16,
     height: 16,
-    borderRadius: 8,
+    borderRadius: 48,
     backgroundColor: colors.online,
     borderWidth: 3,
     borderColor: colors.background,
@@ -620,7 +646,7 @@ const styles = StyleSheet.create({
   },
   unreadBadge: {
     backgroundColor: colors.badge,
-    borderRadius: 10,
+    borderRadius: 24.0,
     minWidth: 20,
     height: 20,
     justifyContent: 'center',
@@ -645,7 +671,7 @@ const styles = StyleSheet.create({
   pinnedIndicator: {
     width: 4,
     height: 4,
-    borderRadius: 2,
+    borderRadius: 16,
     backgroundColor: colors.textSecondary,
     position: 'absolute',
     right: 16,
@@ -665,7 +691,7 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH * 0.92,
     height: SCREEN_HEIGHT * 0.45,
     backgroundColor: 'transparent',
-    borderRadius: 20,
+    borderRadius: 30,
     overflow: 'hidden',
     alignSelf: 'center',
     top: SCREEN_HEIGHT * 0.08,
@@ -691,7 +717,7 @@ const styles = StyleSheet.create({
     top: -4,
     right: -8,
     backgroundColor: colors.textSecondary,
-    borderRadius: 10,
+    borderRadius: 24.0,
     minWidth: 20,
     height: 20,
     justifyContent: 'center',
@@ -778,7 +804,7 @@ const styles = StyleSheet.create({
   },
   previewMessageBubble: {
     backgroundColor: 'rgba(44, 44, 46, 0.9)',
-    borderRadius: 16,
+    borderRadius: 25,
     borderTopLeftRadius: 4,
     padding: 12,
     maxWidth: '80%',
@@ -818,7 +844,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: SCREEN_WIDTH * 0.65,
     backgroundColor: 'transparent',
-    borderRadius: 16,
+    borderRadius: 25,
     overflow: 'hidden',
     bottom: SCREEN_HEIGHT * 0.15,
     right: SCREEN_WIDTH * 0.06,
@@ -827,7 +853,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     overflow: 'hidden',
     paddingHorizontal: 12,
-    borderRadius: 16,
+    borderRadius: 25,
   },
   previewMenuItem: {
     flexDirection: 'row',
