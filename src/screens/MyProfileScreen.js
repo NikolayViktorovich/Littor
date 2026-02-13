@@ -17,6 +17,7 @@ import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 export default function MyProfileScreen({ navigation }) {
   const { profile, updateProfile } = useApp();
+  const accentColor = profile.profileColor || colors.primary;
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [name, setName] = useState(profile.name);
@@ -58,13 +59,13 @@ export default function MyProfileScreen({ navigation }) {
     if (name.trim()) {
       updateProfile({ name: name.trim() });
       setIsEditingName(false);
-      Alert.alert('Success', 'Name updated');
+      Alert.alert('Готово', 'Имя обновлено');
     }
   };
   const handleSaveBio = () => {
     updateProfile({ bio: bio.trim() });
     setIsEditingBio(false);
-    Alert.alert('Success', 'Bio updated');
+    Alert.alert('Готово', 'Статус обновлён');
   };
   const handleChangePhoto = () => {
     setMenuVisible(true);
@@ -88,14 +89,14 @@ export default function MyProfileScreen({ navigation }) {
           >
             <Ionicons name="chevron-back" size={28} color={colors.text} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>My Profile</Text>
+          <Text style={styles.headerTitle}>Профиль</Text>
           <View style={styles.headerRight} />
         </View>
       </View>
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.profileSection}>
           <TouchableOpacity 
-            style={[styles.profileAvatar, { backgroundColor: profile.profileColor || '#FF3B30' }]} 
+            style={[styles.profileAvatar, { backgroundColor: accentColor }]} 
             onPress={handleChangePhoto}
           >
             {profile.photoUri ? (
@@ -104,12 +105,14 @@ export default function MyProfileScreen({ navigation }) {
               <Text style={styles.profileAvatarText}>{profile.avatar}</Text>
             )}
           </TouchableOpacity>
+          <Text style={styles.profileSubtitle}>Так вы выглядите для других</Text>
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>ACCOUNT</Text>
+          <Text style={styles.sectionTitle}>Данные профиля</Text>
+          <Text style={styles.sectionSubtitle}>Основная информация, которую видят другие</Text>
           <View style={styles.card}>
             <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Name</Text>
+              <Text style={styles.infoLabel}>Имя</Text>
               {isEditingName ? (
                 <View style={styles.editContainer}>
                   <TextInput
@@ -117,7 +120,7 @@ export default function MyProfileScreen({ navigation }) {
                     value={name}
                     onChangeText={setName}
                     autoFocus
-                    placeholder="Enter name"
+                    placeholder="Введите имя"
                     placeholderTextColor={colors.textTertiary}
                   />
                   <TouchableOpacity onPress={handleSaveName} style={styles.saveButton}>
@@ -139,24 +142,25 @@ export default function MyProfileScreen({ navigation }) {
                   onPress={() => setIsEditingName(true)}
                 >
                   <Text style={styles.infoValue}>{profile.name}</Text>
-                  <Ionicons name="create-outline" size={20} color={colors.textSecondary} />
+                  <Ionicons name="create" size={20} color={colors.textSecondary} />
                 </TouchableOpacity>
               )}
             </View>
             <View style={styles.divider} />
             <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Phone</Text>
+              <Text style={styles.infoLabel}>Телефон</Text>
               <Text style={styles.infoValue}>{profile.phone}</Text>
             </View>
             <View style={styles.divider} />
             <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Username</Text>
+              <Text style={styles.infoLabel}>Имя пользователя</Text>
               <Text style={styles.infoValue}>@{profile.username}</Text>
             </View>
           </View>
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>BIO</Text>
+          <Text style={styles.sectionTitle}>О себе</Text>
+          <Text style={styles.sectionSubtitle}>Короткая строка, которая звучит как вы</Text>
           <View style={styles.card}>
             {isEditingBio ? (
               <View style={styles.bioEditContainer}>
@@ -166,7 +170,7 @@ export default function MyProfileScreen({ navigation }) {
                   onChangeText={setBio}
                   autoFocus
                   multiline
-                  placeholder="Add a few words about yourself"
+                  placeholder="Расскажите немного о себе"
                   placeholderTextColor={colors.textTertiary}
                   maxLength={70}
                 />
@@ -194,9 +198,9 @@ export default function MyProfileScreen({ navigation }) {
                 onPress={() => setIsEditingBio(true)}
               >
                 <Text style={styles.bioText}>
-                  {profile.bio || 'Add a few words about yourself'}
+                  {profile.bio || 'Расскажите немного о себе'}
                 </Text>
-                <Ionicons name="create-outline" size={20} color={colors.textSecondary} />
+                <Ionicons name="create" size={20} color={colors.textSecondary} />
               </TouchableOpacity>
             )}
           </View>
@@ -228,7 +232,7 @@ export default function MyProfileScreen({ navigation }) {
               activeOpacity={0.6}
             >
               <View style={styles.menuItemContent}>
-                <Ionicons name="images-outline" size={22} color={colors.text} />
+                <Ionicons name="images" size={22} color={colors.text} />
                 <Text style={styles.menuItemText}>Выбрать изображение</Text>
               </View>
             </TouchableOpacity>
@@ -241,7 +245,7 @@ export default function MyProfileScreen({ navigation }) {
                   activeOpacity={0.6}
                 >
                   <View style={styles.menuItemContent}>
-                    <Ionicons name="trash-outline" size={22} color={colors.error} />
+                    <Ionicons name="trash" size={22} color={colors.error} />
                     <Text style={[styles.menuItemText, styles.menuItemTextDanger]}>Удалить изображение</Text>
                   </View>
                 </TouchableOpacity>
@@ -307,13 +311,19 @@ const styles = StyleSheet.create({
     fontFamily: typography.medium,
     color: '#ffffff',
   },
+  profileSubtitle: {
+    marginTop: 10,
+    fontSize: 13,
+    color: colors.textSecondary,
+    fontFamily: typography.regular,
+  },
   cameraButton: {
     position: 'absolute',
     bottom: 0,
     right: 0,
     width: 32,
     height: 32,
-    borderRadius: 16,
+    borderRadius: 25,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'center',
     alignItems: 'center',
@@ -326,12 +336,19 @@ const styles = StyleSheet.create({
     fontFamily: typography.semiBold,
     color: colors.textSecondary,
     paddingHorizontal: 12,
-    marginBottom: 6,
+    marginBottom: 2,
+  },
+  sectionSubtitle: {
+    fontSize: 12,
+    fontFamily: typography.regular,
+    color: colors.textTertiary,
+    paddingHorizontal: 12,
+    marginBottom: 8,
   },
   card: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceLight,
     marginHorizontal: 12,
-    borderRadius: 12,
+    borderRadius: 20,
     padding: 12,
   },
   infoRow: {
@@ -371,7 +388,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     padding: 6,
     backgroundColor: colors.inputBg,
-    borderRadius: 6,
+    borderRadius: 36,
     borderWidth: 1,
     borderColor: colors.border,
   },
@@ -400,7 +417,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     padding: 10,
     backgroundColor: colors.inputBg,
-    borderRadius: 6,
+    borderRadius: 36,
     borderWidth: 1,
     borderColor: colors.border,
     minHeight: 70,
