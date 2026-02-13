@@ -71,7 +71,7 @@ export default function NotificationsScreen({ navigation }) {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Notification Sound</Text>
             <TouchableOpacity style={styles.modalOption} onPress={closeModal}>
-              <Ionicons name="musical-note" size={20} color={colors.text} />
+              <Ionicons name="musical-notes" size={20} color={colors.text} />
               <Text style={styles.modalOptionText}>Default</Text>
               <Ionicons name="checkmark" size={20} color={colors.primary} />
             </TouchableOpacity>
@@ -121,140 +121,149 @@ export default function NotificationsScreen({ navigation }) {
       </View>
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>MESSAGES</Text>
+          <Text style={styles.sectionTitle}>Оповещения о сообщениях</Text>
           <View style={styles.card}>
             <View style={styles.settingRow}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="chatbubble-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <Text style={styles.settingText}>Private Chats</Text>
+              <View style={[styles.iconContainer, { backgroundColor: '#0A84FF' }]}>
+                <Ionicons name="chatbubble" size={20} color="#ffffff" />
+              </View>
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Личные чаты</Text>
               </View>
               <Switch
                 value={messageNotifications}
                 onValueChange={setMessageNotifications}
                 trackColor={{ false: colors.separator, true: colors.primary }}
                 thumbColor="#ffffff"
-                style={styles.switch}
               />
             </View>
             <View style={styles.divider} />
             <View style={styles.settingRow}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="people-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <Text style={styles.settingText}>Groups</Text>
+              <View style={[styles.iconContainer, { backgroundColor: '#32ADE6' }]}>
+                <Ionicons name="people" size={20} color="#ffffff" />
+              </View>
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Группы</Text>
               </View>
               <Switch
                 value={groupNotifications}
                 onValueChange={setGroupNotifications}
                 trackColor={{ false: colors.separator, true: colors.primary }}
                 thumbColor="#ffffff"
-                style={styles.switch}
               />
             </View>
             <View style={styles.divider} />
             <View style={styles.settingRow}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="megaphone-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <Text style={styles.settingText}>Channels</Text>
+              <View style={[styles.iconContainer, { backgroundColor: '#5856D6' }]}>
+                <Ionicons name="megaphone" size={20} color="#ffffff" />
+              </View>
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Каналы</Text>
               </View>
               <Switch
                 value={channelNotifications}
                 onValueChange={setChannelNotifications}
                 trackColor={{ false: colors.separator, true: colors.primary }}
                 thumbColor="#ffffff"
-                style={styles.switch}
               />
             </View>
           </View>
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>SETTINGS</Text>
+          <Text style={styles.sectionTitle}>Как они выглядят</Text>
           <View style={styles.card}>
             <TouchableOpacity style={styles.settingRow} onPress={() => openModal('sound')}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="volume-high-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <View style={styles.settingContent}>
-                  <Text style={styles.settingText}>Sound</Text>
-                  <Text style={styles.settingSubtext}>Default</Text>
-                </View>
+              <View style={[styles.iconContainer, { backgroundColor: '#FF9500' }]}>
+                <Ionicons name="volume-high" size={20} color="#ffffff" />
               </View>
-              <Ionicons name="chevron-forward" size={16} color={colors.textSecondary} />
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Звук</Text>
+                <Text style={styles.settingSubtext}>По умолчанию</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
             </TouchableOpacity>
             <View style={styles.divider} />
             <View style={styles.settingRow}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="phone-portrait-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <Text style={styles.settingText}>Vibration</Text>
+              <View style={[styles.iconContainer, { backgroundColor: '#FF2D55' }]}>
+                <Ionicons name="phone-portrait" size={20} color="#ffffff" />
+              </View>
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Вибрация</Text>
               </View>
               <Switch
                 value={vibrationEnabled}
                 onValueChange={setVibrationEnabled}
                 trackColor={{ false: colors.separator, true: colors.primary }}
                 thumbColor="#ffffff"
-                style={styles.switch}
               />
             </View>
             <View style={styles.divider} />
             <View style={styles.settingRow}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="notifications-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <Text style={styles.settingText}>Badge Counter</Text>
+              <View style={[styles.iconContainer, { backgroundColor: '#FF3B30' }]}>
+                <Ionicons name="notifications" size={20} color="#ffffff" />
+              </View>
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Счётчик уведомлений</Text>
               </View>
               <Switch
                 value={badgeCounter}
                 onValueChange={setBadgeCounter}
                 trackColor={{ false: colors.separator, true: colors.primary }}
                 thumbColor="#ffffff"
-                style={styles.switch}
               />
             </View>
             <View style={styles.divider} />
             <TouchableOpacity style={styles.settingRow} onPress={() => openModal('preview')}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="eye-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <Text style={styles.settingText}>Message Preview</Text>
+              <View style={[styles.iconContainer, { backgroundColor: '#34C759' }]}>
+                <Ionicons name="eye" size={20} color="#ffffff" />
+              </View>
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Предпросмотр сообщений</Text>
               </View>
               <View style={styles.settingRight}>
-                <Text style={styles.settingValue}>{inAppPreview ? 'On' : 'Off'}</Text>
-                <Ionicons name="chevron-forward" size={16} color={colors.textSecondary} />
+                <Text style={styles.settingValue}>{inAppPreview ? 'Вкл.' : 'Выкл.'}</Text>
+                <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
               </View>
             </TouchableOpacity>
           </View>
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>IN-APP</Text>
+          <Text style={styles.sectionTitle}>Внутри приложения</Text>
           <View style={styles.card}>
             <View style={styles.settingRow}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="musical-notes-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <Text style={styles.settingText}>In-App Sounds</Text>
+              <View style={[styles.iconContainer, { backgroundColor: '#AF52DE' }]}>
+                <Ionicons name="musical-notes" size={20} color="#ffffff" />
+              </View>
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Звуки в приложении</Text>
               </View>
               <Switch
                 value={inAppSounds}
                 onValueChange={setInAppSounds}
                 trackColor={{ false: colors.separator, true: colors.primary }}
                 thumbColor="#ffffff"
-                style={styles.switch}
               />
             </View>
             <View style={styles.divider} />
             <View style={styles.settingRow}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="phone-portrait-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <Text style={styles.settingText}>In-App Vibration</Text>
+              <View style={[styles.iconContainer, { backgroundColor: '#FF2D55' }]}>
+                <Ionicons name="phone-portrait" size={20} color="#ffffff" />
+              </View>
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Вибрация в приложении</Text>
               </View>
               <Switch
                 value={inAppVibration}
                 onValueChange={setInAppVibration}
                 trackColor={{ false: colors.separator, true: colors.primary }}
                 thumbColor="#ffffff"
-                style={styles.switch}
               />
             </View>
           </View>
         </View>
         <View style={styles.footer}>
           <Text style={styles.footerText}>
-            Customize notifications for individual chats in their profile pages
+            Вы можете настроить оповещения для конкретного чата в его профиле
           </Text>
         </View>
       </ScrollView>
@@ -324,54 +333,52 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: colors.surface,
-    marginHorizontal: 12,
-    borderRadius: 10,
-    padding: 10,
+    marginHorizontal: 16,
+    borderRadius: 20,
+    overflow: 'hidden',
   },
   settingRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 4,
-  },
-  settingLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
   settingIcon: {
-    marginRight: 10,
-    width: 18,
+    marginRight: 12,
+  },
+  iconContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
   },
   settingContent: {
     flex: 1,
   },
   settingText: {
-    fontSize: 14,
+    fontSize: 15,
     color: colors.text,
   },
   settingSubtext: {
-    fontSize: 12,
+    fontSize: 13,
     color: colors.textSecondary,
     marginTop: 1,
   },
   settingRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 8,
   },
   settingValue: {
-    fontSize: 14,
+    fontSize: 15,
     color: colors.textSecondary,
   },
-  switch: {
-    transform: [{ scaleX: 0.85 }, { scaleY: 0.85 }],
-  },
   divider: {
-    height: 0.5,
+    height: 0.33,
     backgroundColor: colors.separator,
-    marginVertical: 4,
-    marginLeft: 28,
+    marginLeft: 52,
   },
   footer: {
     padding: 16,
@@ -434,7 +441,7 @@ const styles = StyleSheet.create({
   modalButton: {
     flex: 1,
     paddingVertical: 12,
-    borderRadius: 10,
+    borderRadius: 24.0,
     backgroundColor: colors.surfaceLight,
     alignItems: 'center',
   },
