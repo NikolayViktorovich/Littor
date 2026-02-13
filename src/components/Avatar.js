@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet, Image } from 'react-native';
-import { colors, typography } from '../theme/colors';
+import { colors, typography, getAvatarColor } from '../theme/colors';
 export const Avatar = ({ name, size = 52, online = false, style, photoUri, profileColor }) => {
   const initial = name ? name[0].toUpperCase() : '?';
   const avatarSize = { width: size, height: size, borderRadius: size / 2 };
   const textSize = { fontSize: size * 0.4 };
   const indicatorSize = size * 0.3;
-  const backgroundColor = profileColor || colors.surface;
+  const backgroundColor = profileColor || getAvatarColor(name);
   return (
     <View style={[styles.avatar, avatarSize, { backgroundColor }, style]}>
       {photoUri ? (
