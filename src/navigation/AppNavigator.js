@@ -1,12 +1,12 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import ChatsScreen from '../screens/ChatsScreen';
 import ChatScreen from '../screens/ChatScreen';
 import ContactsScreen from '../screens/ContactsScreen';
@@ -32,6 +32,7 @@ function TabNavigator() {
   const { chats } = useApp();
   const unreadCount = chats.reduce((sum, chat) => sum + (chat.unread || 0), 0);
   const CustomTabBar = ({ state, navigation }) => {
+    const [tabBarWidth, setTabBarWidth] = useState(0);
     const blobPosition = useRef(new Animated.Value(state.index)).current;
     const blobScale = useRef(new Animated.Value(1)).current;
     const blobScaleX = useRef(new Animated.Value(1)).current;
@@ -118,9 +119,18 @@ function TabNavigator() {
         ]),
       ]).start();
     }, [state.index]);
+    const numTabs = state.routes.length;
+    const tabWidth = tabBarWidth / numTabs;
+    const blobWidth = 70;
+    
+    const outputRange = state.routes.map((_, index) => {
+      const tabCenter = (index + 0.5) * tabWidth;
+      return (tabCenter - (tabBarWidth / 2)) * 0.94;
+    });
+
     const blobTranslateX = blobPosition.interpolate({
-      inputRange: [0, 1, 2, 3],
-      outputRange: [-120, -40, 40, 120], 
+      inputRange: state.routes.map((_, i) => i),
+      outputRange: outputRange,
     });
     const blobRotation = blobRotate.interpolate({
       inputRange: [-1, 1],
@@ -138,6 +148,7 @@ function TabNavigator() {
             transform: [{ scale: tabBarBounce }],
           },
         ]}
+        onLayout={(e) => setTabBarWidth(e.nativeEvent.layout.width)}
       >
         <Animated.View style={[styles.tabBarBackground, { backgroundColor: flashBackgroundColor }]} />
         <BlurView intensity={120} tint="dark" style={styles.tabBarBlur}>
@@ -168,27 +179,27 @@ function TabNavigator() {
                   navigation.navigate(route.name);
                 }
               };
-              let iconName;
-              let label;
+      let iconName;
+      let label;
               let showBadge = false;
               switch (route.name) {
-                case 'Contacts':
-                  iconName = isFocused ? 'people' : 'people-outline';
-                  label = 'Contacts';
-                  break;
-                case 'Calls':
-                  iconName = isFocused ? 'call' : 'call-outline';
-                  label = 'Calls';
-                  break;
-                case 'Chats':
-                  iconName = isFocused ? 'chatbubbles' : 'chatbubbles-outline';
-                  label = 'Chats';
-                  showBadge = unreadCount > 0;
-                  break;
-                case 'Settings':
-                  iconName = isFocused ? 'settings' : 'settings-outline';
-                  label = 'Settings';
-                  break;
+        case 'Contacts':
+          iconName = 'people';
+          label = 'Контакты';
+          break;
+        case 'Calls':
+          iconName = 'call';
+          label = 'Звонки';
+          break;
+        case 'Chats':
+          iconName = 'chatbubbles';
+          label = 'Чаты';
+          showBadge = unreadCount > 0;
+          break;
+        case 'Settings':
+          iconName = 'settings';
+          label = 'Настройки';
+          break;
               }
               return (
                 <TouchableOpacity
@@ -263,7 +274,7 @@ const styles = StyleSheet.create({
     left: 40,
     right: 40,
     height: 60,
-    borderRadius: 35,
+    borderRadius: 30,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
@@ -276,14 +287,14 @@ const styles = StyleSheet.create({
   },
   tabBarBlur: {
     flex: 1,
-    borderRadius: 35,
+    borderRadius: 30,
   },
   tabBarOverlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(18, 18, 20, 0.05)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 35,
+    borderRadius: 30,
   },
   tabBarContent: {
     flex: 1,
@@ -297,7 +308,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 62,
     backgroundColor: 'rgba(60, 60, 67, 0.6)',
-    borderRadius: 28,
+    borderRadius: 30,
     zIndex: 0,
   },
   tabButton: {
@@ -314,18 +325,18 @@ const styles = StyleSheet.create({
   tabLabel: {
     fontSize: 10,
     color: colors.textSecondary,
-    fontFamily: typography.medium,
+    fontFamily: typography.semiBold,
   },
   tabLabelActive: {
     color: colors.text,
-    fontFamily: typography.semiBold,
+    fontFamily: typography.bold,
   },
   badge: {
     position: 'absolute',
     top: -6,
     right: -10,
     backgroundColor: colors.primary,
-    borderRadius: 9,
+    borderRadius: 20,
     minWidth: 18,
     height: 18,
     justifyContent: 'center',
