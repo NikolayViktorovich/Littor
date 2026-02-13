@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: SCREEN_WIDTH * 0.7,
     backgroundColor: colors.surface,
-    borderRadius: 14,
+    borderRadius: 25,
     padding: 16,
     alignSelf: 'center',
     top: '40%',
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   alertButton: {
     flex: 1,
     paddingVertical: 10,
-    borderRadius: 8,
+    borderRadius: 48,
     backgroundColor: '#ffffff',
     alignItems: 'center',
   },
