@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, typography } from '../theme/colors';
+
 export default function DataStorageScreen({ navigation }) {
   const [autoDownloadPhotos, setAutoDownloadPhotos] = useState(true);
   const [autoDownloadVideos, setAutoDownloadVideos] = useState(false);
@@ -22,6 +23,7 @@ export default function DataStorageScreen({ navigation }) {
   const [modalType, setModalType] = useState('');
   const slideAnim = useRef(new Animated.Value(300)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
     if (modalVisible) {
       Animated.parallel([
@@ -52,50 +54,54 @@ export default function DataStorageScreen({ navigation }) {
       ]).start();
     }
   }, [modalVisible]);
+
   const openModal = (type) => {
     setModalType(type);
     setModalVisible(true);
   };
+
   const closeModal = () => {
     setModalVisible(false);
   };
+
   const handleClearCache = () => {
     closeModal();
   };
+
   const renderModalContent = () => {
     switch (modalType) {
       case 'storage':
         return (
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Storage Usage</Text>
+            <Text style={styles.modalTitle}>Использование памяти</Text>
             <View style={styles.storageItem}>
               <View style={styles.storageLeft}>
-                <Ionicons name="image" size={20} color={colors.text} />
-                <Text style={styles.storageText}>Photos</Text>
+                <Ionicons name="image" size={22} color={colors.text} />
+                <Text style={styles.storageText}>Фото</Text>
               </View>
-              <Text style={styles.storageValue}>120 MB</Text>
+              <Text style={styles.storageValue}>120 МБ</Text>
             </View>
             <View style={styles.storageItem}>
               <View style={styles.storageLeft}>
-                <Ionicons name="videocam" size={20} color={colors.text} />
-                <Text style={styles.storageText}>Videos</Text>
+                <Ionicons name="videocam" size={22} color={colors.text} />
+                <Text style={styles.storageText}>Видео</Text>
               </View>
-              <Text style={styles.storageValue}>85 MB</Text>
+              <Text style={styles.storageValue}>85 МБ</Text>
             </View>
             <View style={styles.storageItem}>
               <View style={styles.storageLeft}>
-                <Ionicons name="document" size={20} color={colors.text} />
-                <Text style={styles.storageText}>Files</Text>
+                <Ionicons name="document" size={22} color={colors.text} />
+                <Text style={styles.storageText}>Файлы</Text>
               </View>
-              <Text style={styles.storageValue}>40 MB</Text>
+              <Text style={styles.storageValue}>40 МБ</Text>
             </View>
             <View style={styles.storageDivider} />
             <View style={styles.storageItem}>
-              <Text style={styles.storageTotalText}>Total</Text>
-              <Text style={styles.storageTotalValue}>245 MB</Text>
+              <Text style={styles.storageTotalText}>Всего</Text>
+              <Text style={styles.storageTotalValue}>245 МБ</Text>
             </View>
             <TouchableOpacity style={styles.modalButtonFull} onPress={closeModal}>
-              <Text style={styles.modalButtonFullText}>Close</Text>
+              <Text style={styles.modalButtonFullText}>Закрыть</Text>
             </TouchableOpacity>
           </View>
         );
@@ -103,19 +109,19 @@ export default function DataStorageScreen({ navigation }) {
         return (
           <View style={styles.modalContent}>
             <Ionicons name="trash" size={48} color={colors.primary} style={styles.modalIcon} />
-            <Text style={styles.modalTitle}>Clear Cache</Text>
+            <Text style={styles.modalTitle}>Очистить кэш</Text>
             <Text style={styles.modalDescription}>
-              This will free up storage space by removing temporary files
+              Это освободит место, удалив временные файлы
             </Text>
             <View style={styles.modalButtons}>
               <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
-                <Text style={styles.modalButtonText}>Cancel</Text>
+                <Text style={styles.modalButtonText}>Отмена</Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 style={[styles.modalButton, styles.modalButtonPrimary]} 
                 onPress={handleClearCache}
               >
-                <Text style={[styles.modalButtonText, styles.modalButtonTextPrimary]}>Clear</Text>
+                <Text style={[styles.modalButtonText, styles.modalButtonTextPrimary]}>Очистить</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -123,43 +129,43 @@ export default function DataStorageScreen({ navigation }) {
       case 'networkUsage':
         return (
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Network Usage</Text>
+            <Text style={styles.modalTitle}>Использование сети</Text>
             <View style={styles.storageItem}>
-              <Text style={styles.storageText}>Sent</Text>
-              <Text style={styles.storageValue}>1.2 GB</Text>
+              <Text style={styles.storageText}>Отправлено</Text>
+              <Text style={styles.storageValue}>1.2 ГБ</Text>
             </View>
             <View style={styles.storageItem}>
-              <Text style={styles.storageText}>Received</Text>
-              <Text style={styles.storageValue}>3.5 GB</Text>
+              <Text style={styles.storageText}>Получено</Text>
+              <Text style={styles.storageValue}>3.5 ГБ</Text>
             </View>
             <View style={styles.storageDivider} />
             <View style={styles.storageItem}>
-              <Text style={styles.storageTotalText}>Total</Text>
-              <Text style={styles.storageTotalValue}>4.7 GB</Text>
+              <Text style={styles.storageTotalText}>Всего</Text>
+              <Text style={styles.storageTotalValue}>4.7 ГБ</Text>
             </View>
             <TouchableOpacity style={styles.modalButtonFull} onPress={closeModal}>
-              <Text style={styles.modalButtonFullText}>Close</Text>
+              <Text style={styles.modalButtonFullText}>Закрыть</Text>
             </TouchableOpacity>
           </View>
         );
       case 'proxy':
         return (
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Proxy Settings</Text>
+            <Text style={styles.modalTitle}>Настройки прокси</Text>
             <Text style={styles.modalDescription}>
-              Configure proxy server for network connections
+              Настройте прокси-сервер для сетевых подключений
             </Text>
             <TouchableOpacity style={styles.modalOption} onPress={closeModal}>
-              <Ionicons name="close-circle-outline" size={20} color={colors.text} />
-              <Text style={styles.modalOptionText}>Disabled</Text>
-              <Ionicons name="checkmark" size={20} color={colors.primary} />
+              <Ionicons name="close-circle" size={22} color={colors.text} />
+              <Text style={styles.modalOptionText}>Отключено</Text>
+              <Ionicons name="checkmark" size={22} color={colors.primary} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.modalOption} onPress={closeModal}>
-              <Ionicons name="globe-outline" size={20} color={colors.text} />
+              <Ionicons name="globe" size={22} color={colors.text} />
               <Text style={styles.modalOptionText}>SOCKS5</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.modalOption} onPress={closeModal}>
-              <Ionicons name="server-outline" size={20} color={colors.text} />
+              <Ionicons name="server" size={22} color={colors.text} />
               <Text style={styles.modalOptionText}>HTTP</Text>
             </TouchableOpacity>
           </View>
@@ -168,6 +174,7 @@ export default function DataStorageScreen({ navigation }) {
         return null;
     }
   };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
@@ -178,158 +185,153 @@ export default function DataStorageScreen({ navigation }) {
         >
           <Ionicons name="chevron-back" size={26} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Data & Storage</Text>
+        <Text style={styles.headerTitle}>Данные и память</Text>
         <View style={styles.headerRight} />
       </View>
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>STORAGE</Text>
+          <Text style={styles.sectionTitle}>ХРАНИЛИЩЕ НА ЭТОМ УСТРОЙСТВЕ</Text>
           <View style={styles.card}>
             <TouchableOpacity style={styles.settingRow} onPress={() => openModal('storage')}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="pie-chart-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <View style={styles.settingContent}>
-                  <Text style={styles.settingText}>Storage Usage</Text>
-                  <Text style={styles.settingSubtext}>245 MB</Text>
-                </View>
+              <View style={[styles.iconContainer, { backgroundColor: '#0A84FF' }]}>
+                <Ionicons name="pie-chart" size={20} color="#ffffff" />
               </View>
-              <Ionicons name="chevron-forward" size={16} color={colors.textSecondary} />
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Использование памяти</Text>
+                <Text style={styles.settingSubtext}>245 МБ</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
             </TouchableOpacity>
             <View style={styles.divider} />
             <TouchableOpacity style={styles.settingRow} onPress={() => openModal('clearCache')}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="trash-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <View style={styles.settingContent}>
-                  <Text style={styles.settingText}>Clear Cache</Text>
-                  <Text style={styles.settingSubtext}>Free up space</Text>
-                </View>
+              <View style={[styles.iconContainer, { backgroundColor: '#FF3B30' }]}>
+                <Ionicons name="trash" size={20} color="#ffffff" />
               </View>
-              <Ionicons name="chevron-forward" size={16} color={colors.textSecondary} />
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Очистить кэш</Text>
+                <Text style={styles.settingSubtext}>Освободить место</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>AUTO-DOWNLOAD</Text>
+          <Text style={styles.sectionTitle}>АВТОЗАГРУЗКА МЕДИА</Text>
           <View style={styles.card}>
             <View style={styles.settingRow}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="image-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <View style={styles.settingContent}>
-                  <Text style={styles.settingText}>Photos</Text>
-                  <Text style={styles.settingSubtext}>On mobile data</Text>
-                </View>
+              <View style={[styles.iconContainer, { backgroundColor: '#0A84FF' }]}>
+                <Ionicons name="image" size={20} color="#ffffff" />
+              </View>
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Фото</Text>
+                <Text style={styles.settingSubtext}>По мобильной сети</Text>
               </View>
               <Switch
                 value={autoDownloadPhotos}
                 onValueChange={setAutoDownloadPhotos}
                 trackColor={{ false: colors.separator, true: colors.primary }}
                 thumbColor="#ffffff"
-                style={styles.switch}
               />
             </View>
             <View style={styles.divider} />
             <View style={styles.settingRow}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="videocam-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <View style={styles.settingContent}>
-                  <Text style={styles.settingText}>Videos</Text>
-                  <Text style={styles.settingSubtext}>On mobile data</Text>
-                </View>
+              <View style={[styles.iconContainer, { backgroundColor: '#0A84FF' }]}>
+                <Ionicons name="videocam" size={20} color="#ffffff" />
+              </View>
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Видео</Text>
+                <Text style={styles.settingSubtext}>По мобильной сети</Text>
               </View>
               <Switch
                 value={autoDownloadVideos}
                 onValueChange={setAutoDownloadVideos}
                 trackColor={{ false: colors.separator, true: colors.primary }}
                 thumbColor="#ffffff"
-                style={styles.switch}
               />
             </View>
             <View style={styles.divider} />
             <View style={styles.settingRow}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="document-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <View style={styles.settingContent}>
-                  <Text style={styles.settingText}>Files</Text>
-                  <Text style={styles.settingSubtext}>On mobile data</Text>
-                </View>
+              <View style={[styles.iconContainer, { backgroundColor: '#0A84FF' }]}>
+                <Ionicons name="document" size={20} color="#ffffff" />
+              </View>
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Файлы</Text>
+                <Text style={styles.settingSubtext}>По мобильной сети</Text>
               </View>
               <Switch
                 value={autoDownloadFiles}
                 onValueChange={setAutoDownloadFiles}
                 trackColor={{ false: colors.separator, true: colors.primary }}
                 thumbColor="#ffffff"
-                style={styles.switch}
               />
             </View>
           </View>
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>DATA USAGE</Text>
+          <Text style={styles.sectionTitle}>СЕТЬ И ДАННЫЕ</Text>
           <View style={styles.card}>
             <View style={styles.settingRow}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="cellular-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <View style={styles.settingContent}>
-                  <Text style={styles.settingText}>Data Saver</Text>
-                  <Text style={styles.settingSubtext}>Reduce usage</Text>
-                </View>
+              <View style={[styles.iconContainer, { backgroundColor: '#0A84FF' }]}>
+                <Ionicons name="cellular" size={20} color="#ffffff" />
+              </View>
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Экономия трафика</Text>
+                <Text style={styles.settingSubtext}>Снизить использование</Text>
               </View>
               <Switch
                 value={useDataSaver}
                 onValueChange={setUseDataSaver}
                 trackColor={{ false: colors.separator, true: colors.primary }}
                 thumbColor="#ffffff"
-                style={styles.switch}
               />
             </View>
             <View style={styles.divider} />
             <TouchableOpacity style={styles.settingRow} onPress={() => openModal('networkUsage')}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="stats-chart-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <View style={styles.settingContent}>
-                  <Text style={styles.settingText}>Network Usage</Text>
-                  <Text style={styles.settingSubtext}>View statistics</Text>
-                </View>
+              <View style={[styles.iconContainer, { backgroundColor: '#0A84FF' }]}>
+                <Ionicons name="stats-chart" size={20} color="#ffffff" />
               </View>
-              <Ionicons name="chevron-forward" size={16} color={colors.textSecondary} />
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Использование сети</Text>
+                <Text style={styles.settingSubtext}>Просмотр статистики</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
             </TouchableOpacity>
             <View style={styles.divider} />
             <TouchableOpacity style={styles.settingRow} onPress={() => openModal('proxy')}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="wifi-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <View style={styles.settingContent}>
-                  <Text style={styles.settingText}>Proxy Settings</Text>
-                  <Text style={styles.settingSubtext}>Not configured</Text>
-                </View>
+              <View style={[styles.iconContainer, { backgroundColor: '#0A84FF' }]}>
+                <Ionicons name="wifi" size={20} color="#ffffff" />
               </View>
-              <Ionicons name="chevron-forward" size={16} color={colors.textSecondary} />
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Настройки прокси</Text>
+                <Text style={styles.settingSubtext}>Не настроено</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>CALLS</Text>
+          <Text style={styles.sectionTitle}>КАЧЕСТВО ЗВОНКОВ</Text>
           <View style={styles.card}>
             <View style={styles.settingRow}>
-              <View style={styles.settingLeft}>
-                <Ionicons name="call-outline" size={18} color={colors.text} style={styles.settingIcon} />
-                <View style={styles.settingContent}>
-                  <Text style={styles.settingText}>Use Less Data</Text>
-                  <Text style={styles.settingSubtext}>Lower audio quality</Text>
-                </View>
+              <View style={[styles.iconContainer, { backgroundColor: '#0A84FF' }]}>
+                <Ionicons name="call" size={20} color="#ffffff" />
+              </View>
+              <View style={styles.settingContent}>
+                <Text style={styles.settingText}>Использовать меньше данных</Text>
+                <Text style={styles.settingSubtext}>Низкое качество звука</Text>
               </View>
               <Switch
                 value={useLessDataCalls}
                 onValueChange={setUseLessDataCalls}
                 trackColor={{ false: colors.separator, true: colors.primary }}
                 thumbColor="#ffffff"
-                style={styles.switch}
               />
             </View>
           </View>
         </View>
         <View style={styles.footer}>
           <Text style={styles.footerText}>
-            Manage data usage and storage to optimize performance
+            Держите Littor быстрым, оставаясь в рамках вашего тарифного плана
           </Text>
         </View>
       </ScrollView>
@@ -358,6 +360,7 @@ export default function DataStorageScreen({ navigation }) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -394,60 +397,59 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontFamily: typography.semiBold,
     color: colors.textSecondary,
-    paddingHorizontal: 12,
+    paddingHorizontal: 16,
     marginBottom: 6,
+    letterSpacing: 0.5,
   },
   card: {
     backgroundColor: colors.surface,
-    marginHorizontal: 12,
-    borderRadius: 10,
-    padding: 10,
+    marginHorizontal: 16,
+    borderRadius: 20,
+    overflow: 'hidden',
   },
   settingRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 4,
-  },
-  settingLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
   settingIcon: {
-    marginRight: 10,
-    width: 18,
+    marginRight: 12,
+  },
+  iconContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
   },
   settingContent: {
     flex: 1,
   },
   settingText: {
-    fontSize: 14,
+    fontSize: 15,
     color: colors.text,
   },
   settingSubtext: {
-    fontSize: 12,
+    fontSize: 13,
     color: colors.textSecondary,
     marginTop: 1,
   },
-  switch: {
-    transform: [{ scaleX: 0.85 }, { scaleY: 0.85 }],
-  },
   divider: {
-    height: 0.5,
+    height: 0.33,
     backgroundColor: colors.separator,
-    marginVertical: 4,
-    marginLeft: 28,
+    marginLeft: 52,
   },
   footer: {
     padding: 16,
     paddingBottom: 32,
   },
   footerText: {
-    fontSize: 12,
+    fontSize: 13,
     color: colors.textSecondary,
     textAlign: 'center',
-    lineHeight: 16,
+    lineHeight: 18,
   },
   overlay: {
     flex: 1,
@@ -455,81 +457,82 @@ const styles = StyleSheet.create({
   },
   backdrop: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   menuContainer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     overflow: 'hidden',
     backgroundColor: colors.surface,
+    maxHeight: '80%',
   },
   modalContent: {
-    padding: 20,
+    padding: 24,
     paddingBottom: 32,
   },
   modalIcon: {
     alignSelf: 'center',
-    marginBottom: 12,
+    marginBottom: 16,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: typography.bold,
     color: colors.text,
     marginBottom: 8,
   },
   modalDescription: {
-    fontSize: 13,
+    fontSize: 14,
     color: colors.textSecondary,
-    marginBottom: 16,
-    lineHeight: 18,
+    marginBottom: 20,
+    lineHeight: 20,
   },
   storageItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 12,
   },
   storageLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 12,
   },
   storageText: {
-    fontSize: 14,
+    fontSize: 16,
     color: colors.text,
   },
   storageValue: {
-    fontSize: 14,
+    fontSize: 16,
     color: colors.textSecondary,
   },
   storageDivider: {
-    height: 0.5,
+    height: 0.33,
     backgroundColor: colors.separator,
-    marginVertical: 8,
+    marginVertical: 10,
   },
   storageTotalText: {
-    fontSize: 15,
+    fontSize: 17,
     fontFamily: typography.semiBold,
     color: colors.text,
   },
   storageTotalValue: {
-    fontSize: 15,
+    fontSize: 17,
     fontFamily: typography.semiBold,
     color: colors.primary,
   },
   modalOption: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    gap: 12,
+    paddingVertical: 14,
+    gap: 14,
   },
   modalOptionText: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 16,
     color: colors.text,
   },
   modalButtons: {
@@ -538,8 +541,8 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 10,
+    paddingVertical: 14,
+    borderRadius: 20,
     backgroundColor: colors.surfaceLight,
     alignItems: 'center',
   },
@@ -547,7 +550,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   modalButtonText: {
-    fontSize: 15,
+    fontSize: 16,
     fontFamily: typography.semiBold,
     color: colors.text,
   },
@@ -555,14 +558,14 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
   modalButtonFull: {
-    paddingVertical: 12,
-    borderRadius: 10,
+    paddingVertical: 14,
+    borderRadius: 20,
     backgroundColor: colors.primary,
     alignItems: 'center',
-    marginTop: 12,
+    marginTop: 16,
   },
   modalButtonFullText: {
-    fontSize: 15,
+    fontSize: 16,
     fontFamily: typography.semiBold,
     color: '#ffffff',
   },
