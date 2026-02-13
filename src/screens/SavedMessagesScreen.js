@@ -69,7 +69,7 @@ export default function SavedMessagesScreen({ navigation }) {
             <Ionicons name="chevron-back" size={28} color={colors.text} />
           </TouchableOpacity>
           <View style={styles.headerCenter}>
-            <Text style={styles.headerTitle}>Saved Messages</Text>
+            <Text style={styles.headerTitle}>Сохранённые сообщения</Text>
           </View>
           <TouchableOpacity style={styles.headerButton}>
             <Ionicons name="search" size={24} color={colors.text} />
@@ -86,10 +86,10 @@ export default function SavedMessagesScreen({ navigation }) {
           contentContainerStyle={styles.messagesContent}
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
-              <Ionicons name="bookmark-outline" size={64} color={colors.textTertiary} />
-              <Text style={styles.emptyText}>No saved messages yet</Text>
+              <Ionicons name="bookmark" size={64} color={colors.textTertiary} />
+              <Text style={styles.emptyText}>Нет сохранённых сообщений</Text>
               <Text style={styles.emptySubtext}>
-                Save important messages, links, and notes here
+                Сохраняйте важные сообщения, ссылки и заметки здесь
               </Text>
             </View>
           }
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   },
   myMessageBubble: {
     backgroundColor: '#ffffff',
-    borderRadius: 16,
+    borderRadius: 25,
     borderTopRightRadius: 4,
     padding: 12,
     maxWidth: '70%',
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flex: 1,
     backgroundColor: colors.inputBg,
-    borderRadius: 20,
+    borderRadius: 30,
     paddingHorizontal: 16,
     paddingVertical: 10,
     marginHorizontal: 8,
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
   sendButton: {
     width: 36,
     height: 36,
-    borderRadius: 18,
+    borderRadius: 27,
     backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center',
