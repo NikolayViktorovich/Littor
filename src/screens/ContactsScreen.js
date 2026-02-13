@@ -13,6 +13,7 @@ import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { SearchBar } from '../components/SearchBar';
 import { LiquidGlassButton } from '../components/LiquidGlassButton';
+import { Avatar } from '../components/Avatar';
 export default function ContactsScreen({ navigation }) {
   const { contacts, createChat, addContact } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
@@ -50,10 +51,7 @@ export default function ContactsScreen({ navigation }) {
       onPress={() => handleContactPress(item)}
       activeOpacity={0.6}
     >
-      <View style={styles.avatar}>
-        <Text style={styles.avatarText}>{item.name[0].toUpperCase()}</Text>
-        {item.online && <View style={styles.onlineIndicator} />}
-      </View>
+      <Avatar name={item.name} size={52} online={item.online} style={{ marginRight: 12 }} />
       <View style={styles.contactInfo}>
         <Text style={styles.contactName}>{item.name}</Text>
         <Text style={[styles.contactStatus, item.online && styles.contactStatusOnline]}>
@@ -205,31 +203,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 16,
     paddingVertical: 10,
-  },
-  avatar: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    backgroundColor: '#ffffff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  avatarText: {
-    color: '#000000',
-    fontSize: 20,
-    fontFamily: typography.medium,
-  },
-  onlineIndicator: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 16,
-    height: 16,
-    borderRadius: 48,
-    backgroundColor: colors.online,
-    borderWidth: 3,
-    borderColor: colors.background,
   },
   contactInfo: {
     flex: 1,

@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { SearchBar } from '../components/SearchBar';
+import { Avatar } from '../components/Avatar';
 export default function ArchivedChatsScreen({ navigation }) {
   const { archivedChats, unarchiveChat, deleteChat } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
@@ -47,10 +48,7 @@ export default function ArchivedChatsScreen({ navigation }) {
         onPress={() => navigation.navigate('Chat', { chat: item })}
         activeOpacity={0.6}
       >
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{item.name[0].toUpperCase()}</Text>
-          {item.online && <View style={styles.onlineIndicator} />}
-        </View>
+        <Avatar name={item.name} size={52} online={item.online} style={{ marginRight: 12 }} />
         <View style={styles.chatContent}>
           <View style={styles.chatHeader}>
             <View style={styles.nameRow}>
@@ -205,31 +203,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     backgroundColor: colors.background,
-  },
-  avatar: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    backgroundColor: '#ffffff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  avatarText: {
-    color: '#000000',
-    fontSize: 20,
-    fontFamily: typography.medium,
-  },
-  onlineIndicator: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 16,
-    height: 16,
-    borderRadius: 48,
-    backgroundColor: colors.online,
-    borderWidth: 3,
-    borderColor: colors.background,
   },
   chatContent: {
     flex: 1,

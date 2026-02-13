@@ -18,6 +18,7 @@ import { useInitialData } from '../hooks/useInitialData';
 import CustomAlert from '../components/CustomAlert';
 import { SearchBar } from '../components/SearchBar';
 import { LiquidGlassButton } from '../components/LiquidGlassButton';
+import { Avatar } from '../components/Avatar';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 export default function ChatsScreen({ navigation }) {
   useInitialData();
@@ -118,10 +119,7 @@ export default function ChatsScreen({ navigation }) {
         activeOpacity={0.6}
         delayLongPress={500}
       >
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{item.name[0].toUpperCase()}</Text>
-          {item.online && <View style={styles.onlineIndicator} />}
-        </View>
+        <Avatar name={item.name} size={52} online={item.online} style={{ marginRight: 12 }} />
         <View style={styles.chatContent}>
           <View style={styles.chatHeader}>
             <View style={styles.nameRow}>
@@ -289,11 +287,7 @@ export default function ChatsScreen({ navigation }) {
                     {previewChat.online ? 'в сети' : 'был(а) в сети час назад'}
                   </Text>
                 </View>
-                <View style={styles.previewAvatar}>
-                  <Text style={styles.previewAvatarText}>
-                    {previewChat.name[0].toUpperCase()}
-                  </Text>
-                </View>
+                <Avatar name={previewChat.name} size={40} />
               </View>
               <View style={styles.previewMessages}>
                 <View style={styles.previewDateSeparator}>
@@ -574,31 +568,6 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 16,
     color: colors.textSecondary,
-  },
-  avatar: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    backgroundColor: '#ffffff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  avatarText: {
-    color: '#000000',
-    fontSize: 20,
-    fontFamily: typography.medium,
-  },
-  onlineIndicator: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 16,
-    height: 16,
-    borderRadius: 48,
-    backgroundColor: colors.online,
-    borderWidth: 3,
-    borderColor: colors.background,
   },
   chatContent: {
     flex: 1,

@@ -7,12 +7,12 @@ import {
   StyleSheet,
   StatusBar,
   Alert,
-  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { LiquidGlassButton } from '../components/LiquidGlassButton';
+import { Avatar } from '../components/Avatar';
 export default function CallsScreen({ navigation }) {
   const { calls, contacts, addCall } = useApp();
   const [selectedFilter, setSelectedFilter] = useState('all');
@@ -45,13 +45,13 @@ export default function CallsScreen({ navigation }) {
         activeOpacity={0.6}
         onPress={() => navigation.navigate('Call', { contact, type: 'outgoing' })}
       >
-        <View style={[styles.avatar, { backgroundColor: contact.profileColor || '#FF3B30' }]}>
-          {contact.photoUri ? (
-            <Image source={{ uri: contact.photoUri }} style={styles.avatarImage} />
-          ) : (
-            <Text style={styles.avatarText}>{item.name[0].toUpperCase()}</Text>
-          )}
-        </View>
+        <Avatar 
+          name={item.name} 
+          size={44} 
+          photoUri={contact.photoUri}
+          profileColor={contact.profileColor}
+          style={{ marginRight: 12 }}
+        />
       <View style={styles.callContent}>
         <Text style={[styles.callName, item.type === 'missed' && styles.callNameMissed]}>
           {item.name} {item.count && `(${item.count})`}
@@ -259,24 +259,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     alignItems: 'center',
-  },
-  avatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-    overflow: 'hidden',
-  },
-  avatarImage: {
-    width: '100%',
-    height: '100%',
-  },
-  avatarText: {
-    color: '#ffffff',
-    fontSize: 18,
-    fontFamily: typography.medium,
   },
   callContent: {
     flex: 1,
