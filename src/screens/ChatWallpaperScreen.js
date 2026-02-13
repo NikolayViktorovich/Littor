@@ -44,7 +44,7 @@ export default function ChatWallpaperScreen({ route, navigation }) {
   const handleChooseFromGallery = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      Alert.alert('Permission Required', 'Gallery permission is required to choose wallpapers.');
+      Alert.alert('Требуется разрешение', 'Для выбора фона нужен доступ к галерее.');
       return;
     }
     try {
@@ -57,7 +57,7 @@ export default function ChatWallpaperScreen({ route, navigation }) {
         setCustomImage(result.assets[0].uri);
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to choose wallpaper. Please try again.');
+      Alert.alert('Ошибка', 'Не удалось выбрать фон. Попробуйте снова.');
     }
   };
   return (
@@ -70,9 +70,9 @@ export default function ChatWallpaperScreen({ route, navigation }) {
         >
           <Ionicons name="chevron-back" size={28} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Chat Wallpaper</Text>
+        <Text style={styles.headerTitle}>Фон чата</Text>
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-          <Text style={styles.saveButtonText}>Save</Text>
+          <Text style={styles.saveButtonText}>Сохранить</Text>
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
@@ -94,11 +94,11 @@ export default function ChatWallpaperScreen({ route, navigation }) {
                 <View style={[styles.brightnessOverlay, { opacity: 1 - brightness }]} />
                 <View style={styles.previewChat}>
                   <View style={styles.previewBubbleIncoming}>
-                    <Text style={styles.previewTextIncoming}>Check out this wallpaper!</Text>
+                    <Text style={styles.previewTextIncoming}>Посмотри на этот фон!</Text>
                     <Text style={styles.previewTime}>12:30</Text>
                   </View>
                   <View style={styles.previewBubbleOwn}>
-                    <Text style={styles.previewTextOwn}>Looks great! 😍</Text>
+                    <Text style={styles.previewTextOwn}>Отлично выглядит! 😍</Text>
                     <View style={styles.previewFooter}>
                       <Text style={styles.previewTimeOwn}>12:31</Text>
                       <Ionicons name="checkmark-done" size={14} color="rgba(255,255,255,0.7)" />
@@ -110,8 +110,8 @@ export default function ChatWallpaperScreen({ route, navigation }) {
             <View style={styles.controlsSection}>
               <View style={styles.controlGroup}>
                 <View style={styles.controlHeader}>
-                  <Ionicons name="sunny-outline" size={20} color={colors.text} />
-                  <Text style={styles.controlLabel}>Brightness</Text>
+                  <Ionicons name="sunny" size={20} color={colors.text} />
+                  <Text style={styles.controlLabel}>Яркость</Text>
                   <Text style={styles.controlValue}>{Math.round(brightness * 100)}%</Text>
                 </View>
                 <Slider
@@ -127,8 +127,8 @@ export default function ChatWallpaperScreen({ route, navigation }) {
               </View>
               <View style={styles.controlGroup}>
                 <View style={styles.controlHeader}>
-                  <Ionicons name="water-outline" size={20} color={colors.text} />
-                  <Text style={styles.controlLabel}>Blur</Text>
+                  <Ionicons name="water" size={20} color={colors.text} />
+                  <Text style={styles.controlLabel}>Размытие</Text>
                   <Text style={styles.controlValue}>{Math.round(blur)}</Text>
                 </View>
                 <Slider
@@ -144,8 +144,8 @@ export default function ChatWallpaperScreen({ route, navigation }) {
               </View>
               <View style={styles.controlGroup}>
                 <View style={styles.controlHeader}>
-                  <Ionicons name="contrast-outline" size={20} color={colors.text} />
-                  <Text style={styles.controlLabel}>Opacity</Text>
+                  <Ionicons name="contrast" size={20} color={colors.text} />
+                  <Text style={styles.controlLabel}>Прозрачность</Text>
                   <Text style={styles.controlValue}>{Math.round(opacity * 100)}%</Text>
                 </View>
                 <Slider
@@ -163,16 +163,16 @@ export default function ChatWallpaperScreen({ route, navigation }) {
                 style={styles.resetButton}
                 onPress={handleResetSettings}
               >
-                <Ionicons name="refresh-outline" size={20} color={colors.text} />
-                <Text style={styles.resetButtonText}>Reset Settings</Text>
+                <Ionicons name="refresh" size={20} color={colors.text} />
+                <Text style={styles.resetButtonText}>Сбросить настройки</Text>
               </TouchableOpacity>
             </View>
           </>
         ) : (
           <View style={styles.emptyState}>
-            <Ionicons name="image-outline" size={64} color={colors.textSecondary} />
-            <Text style={styles.emptyStateText}>No wallpaper selected</Text>
-            <Text style={styles.emptyStateSubtext}>Choose an image from your gallery</Text>
+            <Ionicons name="image" size={64} color={colors.textSecondary} />
+            <Text style={styles.emptyStateText}>Фон не выбран</Text>
+            <Text style={styles.emptyStateSubtext}>Выберите изображение из галереи</Text>
           </View>
         )}
         <View style={styles.actionsSection}>
@@ -181,15 +181,15 @@ export default function ChatWallpaperScreen({ route, navigation }) {
             onPress={handleChooseFromGallery}
           >
             <Ionicons name="images" size={22} color={colors.text} />
-            <Text style={styles.actionButtonText}>Choose from Gallery</Text>
+            <Text style={styles.actionButtonText}>Выбрать из галереи</Text>
           </TouchableOpacity>
           {customImage && (
             <TouchableOpacity 
               style={[styles.actionButton, styles.removeButton]}
               onPress={handleRemoveWallpaper}
             >
-              <Ionicons name="trash-outline" size={22} color={colors.error} />
-              <Text style={[styles.actionButtonText, styles.removeButtonText]}>Remove Wallpaper</Text>
+              <Ionicons name="trash" size={22} color={colors.error} />
+              <Text style={[styles.actionButtonText, styles.removeButtonText]}>Удалить фон</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
   },
   previewContainer: {
     height: 300,
-    borderRadius: 16,
+    borderRadius: 25,
     overflow: 'hidden',
     position: 'relative',
   },
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: 16,
+    borderRadius: 25,
     borderTopLeftRadius: 4,
     alignSelf: 'flex-start',
     maxWidth: '75%',
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#007AFF',
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: 16,
+    borderRadius: 25,
     borderTopRightRadius: 4,
     alignSelf: 'flex-end',
     maxWidth: '75%',
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     paddingVertical: 14,
     paddingHorizontal: 16,
-    borderRadius: 12,
+    borderRadius: 20,
     gap: 10,
   },
   actionButtonText: {
@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 12,
+    borderRadius: 20,
     gap: 8,
     marginTop: 8,
   },
