@@ -225,8 +225,8 @@ export default function ContactProfileScreen({ route, navigation }) {
   };
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor={avatarColor} />
-      <View style={[styles.topSection, { backgroundColor: avatarColor }]}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+      <View style={styles.topSection}>
         <View style={styles.header}>
           <TouchableOpacity 
             style={styles.backButton}
@@ -261,7 +261,7 @@ export default function ContactProfileScreen({ route, navigation }) {
             onPress={() => handleCall('audio')}
           >
             <View style={styles.actionIcon}>
-              <Ionicons name="call" size={20} color="#ffffff" />
+              <Ionicons name="call" size={20} color={colors.text} />
             </View>
             <Text style={styles.actionLabel}>Звонок</Text>
           </TouchableOpacity>
@@ -270,7 +270,7 @@ export default function ContactProfileScreen({ route, navigation }) {
             onPress={() => handleCall('video')}
           >
             <View style={styles.actionIcon}>
-              <Ionicons name="videocam" size={20} color="#ffffff" />
+              <Ionicons name="videocam" size={20} color={colors.text} />
             </View>
             <Text style={styles.actionLabel}>Видео</Text>
           </TouchableOpacity>
@@ -279,7 +279,7 @@ export default function ContactProfileScreen({ route, navigation }) {
             onPress={handleNotifications}
           >
             <View style={styles.actionIcon}>
-              <Ionicons name={isMuted ? "notifications-off" : "notifications"} size={20} color="#ffffff" />
+              <Ionicons name={isMuted ? "notifications-off" : "notifications"} size={20} color={colors.text} />
             </View>
             <Text style={styles.actionLabel}>{isMuted ? 'Вкл. звук' : 'Откл. звук'}</Text>
           </TouchableOpacity>
@@ -288,7 +288,7 @@ export default function ContactProfileScreen({ route, navigation }) {
             onPress={handleShare}
           >
             <View style={styles.actionIcon}>
-              <Ionicons name="share" size={20} color="#ffffff" />
+              <Ionicons name="share" size={20} color={colors.text} />
             </View>
             <Text style={styles.actionLabel}>Поделиться</Text>
           </TouchableOpacity>
@@ -457,6 +457,7 @@ const styles = StyleSheet.create({
   },
   topSection: {
     paddingBottom: 20,
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -483,10 +484,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   avatarWrapper: {
-    borderRadius: 52,
-    borderWidth: 3,
-    borderColor: '#ffffff',
-    padding: 2,
+    overflow: 'hidden',
   },
   name: {
     fontSize: 22,
@@ -514,14 +512,14 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 20,
     borderRadius: 25,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: colors.surface,
     marginBottom: 6,
     width: '100%',
     alignItems: 'center',
   },
   actionLabel: {
     fontSize: 12,
-    color: '#ffffff',
+    color: colors.text,
     fontFamily: typography.medium,
   },
   content: {
