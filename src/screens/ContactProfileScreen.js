@@ -6,20 +6,21 @@ import {
   StyleSheet,
   ScrollView,
   StatusBar,
-  Image,
   Alert,
   Share,
   Modal,
   Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, typography } from '../theme/colors';
+import { colors, typography, getAvatarColor } from '../theme/colors';
 import { useApp } from '../context/AppContext';
+import { Avatar } from '../components/Avatar';
 export default function ContactProfileScreen({ route, navigation }) {
   const { contact } = route.params;
   const { blockUser, unblockUser, chats, deleteChat, clearMessages } = useApp();
   const currentChat = chats.find(c => c.name === contact.name);
   const isBlocked = currentChat?.blocked || false;
+  const avatarColor = contact.profileColor || getAvatarColor(contact.name);
   const [menuVisible, setMenuVisible] = React.useState(false);
   const [isMuted, setIsMuted] = React.useState(false);
   const slideAnim = useRef(new Animated.Value(300)).current;
@@ -224,8 +225,8 @@ export default function ContactProfileScreen({ route, navigation }) {
   };
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor={contact.profileColor || '#FF3B30'} />
-      <View style={[styles.topSection, { backgroundColor: contact.profileColor || '#FF3B30' }]}>
+      <StatusBar barStyle="light-content" backgroundColor={avatarColor} />
+      <View style={[styles.topSection, { backgroundColor: avatarColor }]}>
         <View style={styles.header}>
           <TouchableOpacity 
             style={styles.backButton}
@@ -241,12 +242,13 @@ export default function ContactProfileScreen({ route, navigation }) {
           </TouchableOpacity>
         </View>
         <View style={styles.profileSection}>
-          <View style={styles.avatarContainer}>
-            {contact.photoUri ? (
-              <Image source={{ uri: contact.photoUri }} style={styles.avatarImage} />
-            ) : (
-              <Text style={styles.avatarText}>{contact.name[0].toUpperCase()}</Text>
-            )}
+          <View style={styles.avatarWrapper}>
+            <Avatar 
+              name={contact.name} 
+              size={100} 
+              photoUri={contact.photoUri}
+              profileColor={avatarColor}
+            />
           </View>
           <Text style={styles.name}>{contact.name}</Text>
           <Text style={styles.status}>
@@ -480,31 +482,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 16,
   },
-  avatarContainer: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 12,
-    overflow: 'hidden',
-    borderWidth: 1,
+  avatarWrapper: {
+    borderRadius: 52,
+    borderWidth: 3,
     borderColor: '#ffffff',
-  },
-  avatarImage: {
-    width: '100%',
-    height: '100%',
-  },
-  avatarText: {
-    fontSize: 36,
-    fontFamily: typography.semiBold,
-    color: '#ffffff',
+    padding: 2,
   },
   name: {
     fontSize: 22,
     fontFamily: typography.bold,
     color: '#ffffff',
     marginBottom: 3,
+    marginTop: 12,
   },
   status: {
     fontSize: 14,
