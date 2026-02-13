@@ -60,12 +60,12 @@ export default function ContactProfileScreen({ route, navigation }) {
   const handleBlock = () => {
     if (isBlocked) {
       Alert.alert(
-        'Unblock User',
-        `Unblock ${contact.name}?`,
+        'Разблокировать пользователя',
+        `Разблокировать ${contact.name}?`,
         [
-          { text: 'Cancel', style: 'cancel' },
+          { text: 'Отмена', style: 'cancel' },
           { 
-            text: 'Unblock', 
+            text: 'Разблокировать', 
             onPress: () => {
               if (currentChat) unblockUser(currentChat.id);
             }
@@ -74,12 +74,12 @@ export default function ContactProfileScreen({ route, navigation }) {
       );
     } else {
       Alert.alert(
-        'Block User',
-        `Block ${contact.name}?`,
+        'Заблокировать пользователя',
+        `Заблокировать ${contact.name}?`,
         [
-          { text: 'Cancel', style: 'cancel' },
+          { text: 'Отмена', style: 'cancel' },
           { 
-            text: 'Block', 
+            text: 'Заблокировать', 
             style: 'destructive',
             onPress: () => {
               if (currentChat) blockUser(currentChat.id);
@@ -92,15 +92,15 @@ export default function ContactProfileScreen({ route, navigation }) {
   const handleNotifications = () => {
     setIsMuted(!isMuted);
     Alert.alert(
-      isMuted ? 'Unmuted' : 'Muted',
-      `Notifications ${isMuted ? 'enabled' : 'disabled'} for ${contact.name}`
+      isMuted ? 'Уведомления включены' : 'Уведомления выключены',
+      `Уведомления для ${contact.name} теперь ${isMuted ? 'включены' : 'выключены'}`
     );
   };
   const handleShare = async () => {
     try {
       await Share.share({
-        message: `Contact: ${contact.name}\nUsername: @${contact.username || contact.name.toLowerCase()}`,
-        title: 'Share Contact',
+        message: `Контакт: ${contact.name}\nИмя пользователя: @${contact.username || contact.name.toLowerCase()}`,
+        title: 'Поделиться контактом',
       });
     } catch (error) {
       console.log(error);
@@ -115,15 +115,15 @@ export default function ContactProfileScreen({ route, navigation }) {
       case 'edit':
         setTimeout(() => {
           Alert.prompt(
-            'Edit Contact',
-            'Enter new name for this contact',
+            'Редактировать контакт',
+            'Введите новое имя контакта',
             [
-              { text: 'Cancel', style: 'cancel' },
+              { text: 'Отмена', style: 'cancel' },
               { 
-                text: 'Save', 
+                text: 'Сохранить', 
                 onPress: (name) => {
                   if (name && name.trim()) {
-                    Alert.alert('Success', `Contact renamed to ${name.trim()}`);
+                    Alert.alert('Готово', `Контакт переименован в ${name.trim()}`);
                   }
                 }
               },
@@ -136,13 +136,13 @@ export default function ContactProfileScreen({ route, navigation }) {
       case 'export':
         setTimeout(() => {
           Alert.alert(
-            'Export Chat',
-            'Export chat history as a file?',
+            'Экспорт чата',
+            'Выгрузить историю чата в файл?',
             [
-              { text: 'Cancel', style: 'cancel' },
+              { text: 'Отмена', style: 'cancel' },
               { 
-                text: 'Export', 
-                onPress: () => Alert.alert('Success', 'Chat exported successfully')
+                text: 'Экспортировать', 
+                onPress: () => Alert.alert('Готово', 'Чат успешно экспортирован')
               },
             ]
           );
@@ -154,14 +154,14 @@ export default function ContactProfileScreen({ route, navigation }) {
       case 'report':
         setTimeout(() => {
           Alert.alert(
-            'Report User',
-            `Report ${contact.name} for spam or abuse?`,
+            'Пожаловаться на пользователя',
+            `Пожаловаться на ${contact.name} за спам или злоупотребление?`,
             [
-              { text: 'Cancel', style: 'cancel' },
+              { text: 'Отмена', style: 'cancel' },
               { 
-                text: 'Report', 
+                text: 'Пожаловаться', 
                 style: 'destructive',
-                onPress: () => Alert.alert('Reported', 'User has been reported')
+                onPress: () => Alert.alert('Жалоба отправлена', 'Пользователь отмечен как нарушитель')
               },
             ]
           );
@@ -171,17 +171,17 @@ export default function ContactProfileScreen({ route, navigation }) {
   };
   const handleClearChat = () => {
     Alert.alert(
-      'Clear Chat History',
-      `Delete all messages with ${contact.name}?`,
+      'Очистить историю чата',
+      `Удалить все сообщения с ${contact.name}?`,
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: 'Отмена', style: 'cancel' },
         { 
-          text: 'Clear', 
+          text: 'Очистить', 
           style: 'destructive',
           onPress: () => {
             if (currentChat) {
               clearMessages(currentChat.id);
-              Alert.alert('Success', 'Chat history cleared');
+              Alert.alert('Готово', 'История чата очищена');
             }
           }
         },
@@ -190,18 +190,18 @@ export default function ContactProfileScreen({ route, navigation }) {
   };
   const handleDeleteChat = () => {
     Alert.alert(
-      'Delete Chat',
-      `Delete chat with ${contact.name}? This cannot be undone.`,
+      'Удалить чат',
+      `Удалить чат с ${contact.name}? Это действие нельзя отменить.`,
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: 'Отмена', style: 'cancel' },
         { 
-          text: 'Delete', 
+          text: 'Удалить', 
           style: 'destructive',
           onPress: () => {
             if (currentChat) {
               deleteChat(currentChat.id);
               navigation.navigate('Main');
-              Alert.alert('Success', 'Chat deleted');
+              Alert.alert('Готово', 'Чат удалён');
             }
           }
         },
@@ -250,7 +250,7 @@ export default function ContactProfileScreen({ route, navigation }) {
           </View>
           <Text style={styles.name}>{contact.name}</Text>
           <Text style={styles.status}>
-            {isBlocked ? 'blocked' : contact.online ? 'online' : contact.status || 'last seen recently'}
+            {isBlocked ? 'заблокирован' : contact.online ? 'в сети' : contact.status || 'был(а) недавно'}
           </Text>
         </View>
         <View style={styles.actionsRow}>
@@ -261,7 +261,7 @@ export default function ContactProfileScreen({ route, navigation }) {
             <View style={styles.actionIcon}>
               <Ionicons name="call" size={20} color="#ffffff" />
             </View>
-            <Text style={styles.actionLabel}>Call</Text>
+            <Text style={styles.actionLabel}>Звонок</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.actionButton}
@@ -270,7 +270,7 @@ export default function ContactProfileScreen({ route, navigation }) {
             <View style={styles.actionIcon}>
               <Ionicons name="videocam" size={20} color="#ffffff" />
             </View>
-            <Text style={styles.actionLabel}>Video</Text>
+            <Text style={styles.actionLabel}>Видео</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.actionButton}
@@ -279,25 +279,25 @@ export default function ContactProfileScreen({ route, navigation }) {
             <View style={styles.actionIcon}>
               <Ionicons name={isMuted ? "notifications-off" : "notifications"} size={20} color="#ffffff" />
             </View>
-            <Text style={styles.actionLabel}>{isMuted ? 'Unmute' : 'Mute'}</Text>
+            <Text style={styles.actionLabel}>{isMuted ? 'Вкл. звук' : 'Откл. звук'}</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.actionButton}
             onPress={handleShare}
           >
             <View style={styles.actionIcon}>
-              <Ionicons name="share-outline" size={20} color="#ffffff" />
+              <Ionicons name="share" size={20} color="#ffffff" />
             </View>
-            <Text style={styles.actionLabel}>Share</Text>
+            <Text style={styles.actionLabel}>Поделиться</Text>
           </TouchableOpacity>
         </View>
       </View>
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
           <View style={styles.infoRow}>
-            <Ionicons name="call-outline" size={18} color={colors.text} style={styles.infoIcon} />
+            <Ionicons name="call" size={18} color={colors.text} style={styles.infoIcon} />
             <View style={styles.infoContent}>
-              <Text style={styles.infoLabel}>Phone</Text>
+              <Text style={styles.infoLabel}>Телефон</Text>
               <Text style={styles.infoValue}>{contact.phone || '+1 234 567 8900'}</Text>
             </View>
           </View>
@@ -305,16 +305,16 @@ export default function ContactProfileScreen({ route, navigation }) {
           <View style={styles.infoRow}>
             <Ionicons name="at" size={18} color={colors.text} style={styles.infoIcon} />
             <View style={styles.infoContent}>
-              <Text style={styles.infoLabel}>Username</Text>
+              <Text style={styles.infoLabel}>Имя пользователя</Text>
               <Text style={styles.infoValue}>@{contact.username || contact.name.toLowerCase()}</Text>
             </View>
           </View>
           <View style={styles.divider} />
           <View style={styles.infoRow}>
-            <Ionicons name="information-circle-outline" size={18} color={colors.text} style={styles.infoIcon} />
+            <Ionicons name="information-circle" size={18} color={colors.text} style={styles.infoIcon} />
             <View style={styles.infoContent}>
-              <Text style={styles.infoLabel}>Bio</Text>
-              <Text style={styles.infoValue}>{contact.bio || 'No bio yet'}</Text>
+              <Text style={styles.infoLabel}>О себе</Text>
+              <Text style={styles.infoValue}>{contact.bio || 'Пока ничего не указано'}</Text>
             </View>
           </View>
         </View>
@@ -324,21 +324,21 @@ export default function ContactProfileScreen({ route, navigation }) {
             onPress={handleNotifications}
           >
             <Ionicons 
-              name={isMuted ? "notifications-off-outline" : "notifications-outline"} 
+              name={isMuted ? "notifications-off" : "notifications"} 
               size={18} 
               color={colors.text} 
               style={styles.menuIcon} 
             />
-            <Text style={styles.menuText}>Notifications</Text>
-            <Text style={styles.menuValue}>{isMuted ? 'Off' : 'On'}</Text>
+            <Text style={styles.menuText}>Уведомления</Text>
+            <Text style={styles.menuValue}>{isMuted ? 'Выкл.' : 'Вкл.'}</Text>
           </TouchableOpacity>
           <View style={styles.divider} />
           <TouchableOpacity 
             style={styles.settingsItem}
             onPress={handleChangeChatColor}
           >
-            <Ionicons name="color-palette-outline" size={18} color={colors.text} style={styles.menuIcon} />
-            <Text style={styles.menuText}>Change Chat Color</Text>
+            <Ionicons name="color-palette" size={18} color={colors.text} style={styles.menuIcon} />
+            <Text style={styles.menuText}>Цвет чата</Text>
             <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
           </TouchableOpacity>
           <View style={styles.divider} />
@@ -346,8 +346,8 @@ export default function ContactProfileScreen({ route, navigation }) {
             style={styles.settingsItem}
             onPress={handleChangeWallpaper}
           >
-            <Ionicons name="image-outline" size={18} color={colors.text} style={styles.menuIcon} />
-            <Text style={styles.menuText}>Change Wallpaper</Text>
+            <Ionicons name="image" size={18} color={colors.text} style={styles.menuIcon} />
+            <Text style={styles.menuText}>Фон чата</Text>
             <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
           </TouchableOpacity>
         </View>
@@ -356,19 +356,19 @@ export default function ContactProfileScreen({ route, navigation }) {
             style={styles.settingsItem}
             onPress={handleClearChat}
           >
-            <Ionicons name="trash-outline" size={18} color={colors.text} style={styles.menuIcon} />
-            <Text style={styles.menuText}>Clear Chat History</Text>
+            <Ionicons name="trash" size={18} color={colors.text} style={styles.menuIcon} />
+            <Text style={styles.menuText}>Очистить историю</Text>
           </TouchableOpacity>
           <View style={styles.divider} />
           <TouchableOpacity style={styles.settingsItem} onPress={handleBlock}>
             <Ionicons 
-              name={isBlocked ? "checkmark-circle-outline" : "ban-outline"} 
+              name={isBlocked ? "checkmark-circle" : "ban"} 
               size={18} 
               color={isBlocked ? colors.text : colors.error} 
               style={styles.menuIcon} 
             />
             <Text style={[styles.menuText, !isBlocked && styles.menuTextDanger]}>
-              {isBlocked ? 'Unblock User' : 'Block User'}
+              {isBlocked ? 'Разблокировать' : 'Заблокировать'}
             </Text>
           </TouchableOpacity>
           <View style={styles.divider} />
@@ -376,8 +376,8 @@ export default function ContactProfileScreen({ route, navigation }) {
             style={styles.settingsItem}
             onPress={handleDeleteChat}
           >
-            <Ionicons name="trash-outline" size={18} color={colors.error} style={styles.menuIcon} />
-            <Text style={[styles.menuText, styles.menuTextDanger]}>Delete Chat</Text>
+            <Ionicons name="trash" size={18} color={colors.error} style={styles.menuIcon} />
+            <Text style={[styles.menuText, styles.menuTextDanger]}>Удалить чат</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -407,8 +407,8 @@ export default function ContactProfileScreen({ route, navigation }) {
               activeOpacity={0.6}
             >
               <View style={styles.menuItemContent}>
-                <Ionicons name="create-outline" size={22} color={colors.text} />
-                <Text style={styles.menuItemText}>Edit Contact</Text>
+                <Ionicons name="create" size={22} color={colors.text} />
+                <Text style={styles.menuItemText}>Редактировать контакт</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity 
@@ -417,8 +417,8 @@ export default function ContactProfileScreen({ route, navigation }) {
               activeOpacity={0.6}
             >
               <View style={styles.menuItemContent}>
-                <Ionicons name="search-outline" size={22} color={colors.text} />
-                <Text style={styles.menuItemText}>Search in Chat</Text>
+                <Ionicons name="search" size={22} color={colors.text} />
+                <Text style={styles.menuItemText}>Искать в чате</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity 
@@ -427,8 +427,8 @@ export default function ContactProfileScreen({ route, navigation }) {
               activeOpacity={0.6}
             >
               <View style={styles.menuItemContent}>
-                <Ionicons name="download-outline" size={22} color={colors.text} />
-                <Text style={styles.menuItemText}>Export Chat</Text>
+                <Ionicons name="download" size={22} color={colors.text} />
+                <Text style={styles.menuItemText}>Экспорт чата</Text>
               </View>
             </TouchableOpacity>
             <View style={styles.menuDivider} />
@@ -438,8 +438,8 @@ export default function ContactProfileScreen({ route, navigation }) {
               activeOpacity={0.6}
             >
               <View style={styles.menuItemContent}>
-                <Ionicons name="flag-outline" size={22} color={colors.error} />
-                <Text style={[styles.menuItemText, styles.menuItemTextDanger]}>Report User</Text>
+                <Ionicons name="flag" size={22} color={colors.error} />
+                <Text style={[styles.menuItemText, styles.menuItemTextDanger]}>Пожаловаться</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -524,7 +524,7 @@ const styles = StyleSheet.create({
   actionIcon: {
     paddingVertical: 14,
     paddingHorizontal: 20,
-    borderRadius: 14,
+    borderRadius: 25,
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
     marginBottom: 6,
     width: '100%',
@@ -542,7 +542,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     marginTop: 12,
     marginHorizontal: 12,
-    borderRadius: 12,
+    borderRadius: 20,
     overflow: 'hidden',
   },
   infoRow: {
