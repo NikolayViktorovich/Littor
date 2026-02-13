@@ -24,6 +24,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { ChatMenu } from '../components/ChatMenu';
+import { Avatar } from '../components/Avatar';
 export default function ChatScreen({ route, navigation }) {
   const { chat } = route.params;
   const { messages, addMessage, clearMessages, blockUser, unblockUser, chats } = useApp();
@@ -664,13 +665,12 @@ export default function ChatScreen({ route, navigation }) {
               onPress={handleOpenProfile}
               activeOpacity={0.7}
             >
-              <View style={[styles.headerAvatarCircle, { backgroundColor: chat.profileColor || '#FF3B30' }]}>
-                {chat.photoUri ? (
-                  <Image source={{ uri: chat.photoUri }} style={styles.headerAvatarImage} />
-                ) : (
-                  <Text style={styles.headerAvatarText}>{chat.name[0].toUpperCase()}</Text>
-                )}
-              </View>
+              <Avatar 
+                name={chat.name} 
+                size={40} 
+                photoUri={chat.photoUri}
+                profileColor={chat.profileColor}
+              />
             </TouchableOpacity>
           </View>
           <TouchableOpacity 

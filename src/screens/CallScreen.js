@@ -6,10 +6,10 @@ import {
   StyleSheet,
   StatusBar,
   Animated,
-  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, typography } from '../theme/colors';
+import { Avatar } from '../components/Avatar';
 export default function CallScreen({ route, navigation }) {
   const { contact, type = 'outgoing', callType = 'audio' } = route.params;
   const [callState, setCallState] = useState(type === 'incoming' ? 'ringing' : 'calling');
@@ -64,13 +64,12 @@ export default function CallScreen({ route, navigation }) {
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
       <View style={styles.content}>
         <Animated.View style={[styles.avatarContainer, { transform: [{ scale: pulseAnim }] }]}>
-          <View style={[styles.avatar, { backgroundColor: contact.profileColor || '#FF3B30' }]}>
-            {contact.photoUri ? (
-              <Image source={{ uri: contact.photoUri }} style={styles.avatarImage} />
-            ) : (
-              <Text style={styles.avatarText}>{contact.name[0].toUpperCase()}</Text>
-            )}
-          </View>
+          <Avatar 
+            name={contact.name} 
+            size={120} 
+            photoUri={contact.photoUri}
+            profileColor={contact.profileColor}
+          />
         </Animated.View>
         <Text style={styles.name}>{contact.name}</Text>
         <Text style={styles.status}>
