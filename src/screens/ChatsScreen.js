@@ -11,7 +11,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { BlurView } from 'expo-blur';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { useInitialData } from '../hooks/useInitialData';
@@ -150,7 +150,11 @@ export default function ChatsScreen({ navigation }) {
             </View>
           )}
         </View>
-        {item.pinned && <View style={styles.pinnedIndicator} />}
+        {item.pinned && (
+          <View style={styles.pinnedIndicator}>
+            <Ionicons name="pin" size={16} color={colors.textSecondary} />
+          </View>
+        )}
       </TouchableOpacity>
       {isEditMode && (
         <View style={styles.editActions}>
@@ -370,7 +374,7 @@ export default function ChatsScreen({ navigation }) {
                 style={styles.previewMenuItem}
                 onPress={() => handlePreviewAction('pin')}
               >
-                <Ionicons name="pin" size={20} color={colors.text} />
+                <MaterialCommunityIcons name="pin" size={20} color={colors.text} />
                 <Text style={styles.previewMenuText}>Закрепить</Text>
               </TouchableOpacity>
               <View style={styles.previewMenuDivider} />
@@ -638,13 +642,10 @@ const styles = StyleSheet.create({
     fontFamily: typography.medium,
   },
   pinnedIndicator: {
-    width: 4,
-    height: 4,
-    borderRadius: 16,
-    backgroundColor: colors.textSecondary,
     position: 'absolute',
     right: 16,
     top: '50%',
+    transform: [{ translateY: -8 }],
   },
   previewOverlay: {
     flex: 1,

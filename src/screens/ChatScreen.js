@@ -20,7 +20,7 @@ import { SearchBar } from '../components/SearchBar';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors, typography } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { ChatMenu } from '../components/ChatMenu';
@@ -1126,7 +1126,7 @@ export default function ChatScreen({ route, navigation }) {
                 <Text style={styles.actionText}>Редактировать</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.actionItem} onPress={() => handleMessageAction('pin')}>
-                <Ionicons name="pin" size={18} color={colors.text} />
+                <MaterialCommunityIcons name="pin" size={18} color={colors.text} />
                 <Text style={styles.actionText}>Закрепить</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.actionItem} onPress={() => handleMessageAction('forward')}>
