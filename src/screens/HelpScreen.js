@@ -326,7 +326,6 @@ export default function HelpScreen({ navigation }) {
         </View>
         <View style={styles.footer}>
           <Text style={styles.footerText}>Littor Messenger</Text>
-          <Text style={styles.footerSubtext}>Made with ❤️</Text>
         </View>
       </ScrollView>
       <Modal
