@@ -1556,10 +1556,10 @@ const styles = StyleSheet.create({
     fontFamily: typography.medium,
   },
   incomingBubble: {
-    backgroundColor: 'rgba(44, 44, 46, 0.8)',
-    borderRadius: 25,
-    borderTopLeftRadius: 4,
+    backgroundColor: 'rgba(30, 30, 35, 0.95)',
+    borderRadius: 24,
     padding: 12,
+    paddingHorizontal: 14,
     maxWidth: '70%',
   },
   senderName: {
@@ -1586,9 +1586,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   myMessageBubble: {
-    borderRadius: 25,
-    borderTopRightRadius: 4,
+    borderRadius: 24,
     padding: 12,
+    paddingHorizontal: 14,
     maxWidth: '70%',
   },
   myMessageText: {
