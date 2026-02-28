@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "LITTOR",
+    "slug": "littor-messenger",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.littor.app",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "LITTOR needs access to your microphone for voice messages",
+        "NSPhotoLibraryUsageDescription": "LITTOR needs access to your photos to send images"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#6C5CE7"
+      },
+      "package": "com.littor.app",
+      "permissions": ["RECORD_AUDIO", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "LITTOR needs access to your photos to send images"
+        }
+      ]
+    ],
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
